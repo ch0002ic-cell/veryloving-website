@@ -8,6 +8,7 @@
       content="Read the candidate privacy notice for the VeryLoving mobile and wearable companion concept."
     />
     <meta name="theme-color" content="#fbf8f0" />
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
     <link
       rel="canonical"
       href="https://ch0002ic-cell.github.io/veryloving-website/privacy.html"
@@ -25,33 +26,15 @@
     <meta name="twitter:card" content="summary" />
     <title>Privacy notice | VeryLoving</title>
     <link rel="stylesheet" href="styles.css" />
+    <script src="site.js" defer></script>
   </head>
-  <body>
+  <body class="doc-page">
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <header class="site-header">
-      <div class="container header-inner">
-        <a class="brand" href="index.html" aria-label="VeryLoving home">
-          <img
-            src="assets/veryloving-logo.avif"
-            width="368"
-            height="82"
-            alt="VeryLoving"
-          />
-        </a>
-        <nav aria-label="Primary navigation">
-          <ul class="site-nav">
-            <li><a href="faq.html">FAQ</a></li>
-            <li>
-              <a
-                class="button"
-                href="https://buy.stripe.com/8x2dR1duX7UD9MvcVo2kw02"
-                rel="external"
-                >Pre-order</a
-              >
-            </li>
-          </ul>
-        </nav>
+      <div class="header-inner">
+        <a class="brand" href="index.html" aria-label="VeryLoving home"><img src="assets/veryloving-logo.avif" width="368" height="82" alt="VeryLoving" /></a>
+        <nav class="primary-nav" aria-label="Primary navigation"><a href="faq.html">FAQ</a></nav>
       </div>
     </header>
 
@@ -98,10 +81,14 @@
             not expose the same features.
           </p>
           <p>
-            The website files published by veryloving Inc. do not include forms,
-            advertising trackers, or analytics scripts. The website host may
-            process routine request information, such as an IP address and browser
-            details, according to its own privacy practices.
+            The website files published by veryloving Inc. do not include a
+            hosted form, advertising trackers, or analytics scripts. Selecting
+            Subscribe opens an external Google Form. An embedded YouTube video
+            may process routine request and device information under YouTube's
+            privacy practices, and the website host may process routine request
+            information, such as an IP address and browser details, under its own
+            practices. The local site script only controls the FAQ accordion and
+            does not collect or transmit visitor data.
           </p>
 
           <h2>Data the candidate app may process</h2>
@@ -269,46 +256,18 @@
       </div>
     </main>
 
+    <section class="guardian-signup" aria-labelledby="guardian-title">
+      <div class="guardian-inner">
+        <h2 id="guardian-title">Be the <strong>1st</strong> guardian angel<br />to make our world <span>veryloving</span></h2>
+        <img src="assets/guardian-star.avif" width="162" height="162" alt="" />
+        <a class="subscribe-pill" href="https://forms.gle/14Kyc8APdbFMVHSQ8" target="_blank" rel="noopener noreferrer">Subscribe</a>
+      </div>
+    </section>
     <footer class="site-footer">
-      <div class="footer-intro">
-        <div class="container">
-          <p class="footer-brand">VeryLoving</p>
-          <p class="footer-copy">
-            An early-stage wearable companion concept from veryloving Inc.
-            Questions? <a href="mailto:george@verylovinginc.com">Email us</a>.
-          </p>
-        </div>
-      </div>
-      <div class="footer-utility">
-        <div class="container footer-utility-inner">
-          <div class="footer-links">
-            <nav aria-label="Footer navigation">
-              <ul class="footer-nav">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="faq.html">FAQ</a></li>
-                <li>
-                  <a href="privacy.html" aria-current="page">Privacy</a>
-                </li>
-                <li><a href="accessibility-statement.html">Accessibility</a></li>
-              </ul>
-            </nav>
-            <ul class="social-links" aria-label="VeryLoving social profiles">
-              <li>
-                <a href="https://www.linkedin.com/company/veryloving" rel="external"
-                  >LinkedIn</a
-                >
-              </li>
-              <li>
-                <a href="https://www.instagram.com/verylovinginc/" rel="external"
-                  >Instagram</a
-                >
-              </li>
-              <li><a href="https://x.com/verylovinginc" rel="external">X</a></li>
-            </ul>
-          </div>
-          <p class="legal-line">© 2026 veryloving Inc.</p>
-        </div>
-      </div>
+      <div class="footer-column footer-address"><p>2 Marina Blvd B300, San Francisco, CALIFORNIA 94123</p></div>
+      <div class="footer-column footer-contact"><a href="tel:+16507626230">650-762-6230</a><a href="mailto:george@verylovinginc.com">GEORGE@VERYLOVINGINC.COM</a></div>
+      <nav class="footer-column footer-legal" aria-label="Legal"><a href="privacy.html">PRIVACY POLICY</a><a href="accessibility-statement.html">ACCESSIBILITY STATEMENT</a></nav>
+      <div class="footer-column footer-credit"><p>© 2025 BY VERYLOVING</p><p>BUILT AT FOUNDERS INC.</p></div>
     </footer>
   </body>
 </html>
