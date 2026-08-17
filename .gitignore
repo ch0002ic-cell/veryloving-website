@@ -1,0 +1,10 @@
+.DS_Store
+*.log
+*.tmp
+*~
+
+.cache/
+node_modules/
+coverage/
+playwright-report/
+test-results/

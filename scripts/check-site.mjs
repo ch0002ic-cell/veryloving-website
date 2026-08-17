@@ -20,11 +20,11 @@ const expectedPages = new Map([
 ]);
 const requiredAssets = new Map([
   ["assets/veryloving-logo.avif", 150_000],
-  ["assets/pink-poppy-flowers.avif", 500_000],
   ["assets/phone-map-preview.avif", 250_000],
   ["assets/charm-preview.avif", 350_000],
 ]);
 const expectedFiles = new Set([
+  ".gitignore",
   ...expectedPages.keys(),
   ...requiredAssets.keys(),
   "package.json",
@@ -413,8 +413,66 @@ if (!/@media\s*\(\s*prefers-reduced-motion\s*:\s*reduce\s*\)/iu.test(css)) {
 if (!/@media\s*\([^)]*(?:max-width|min-width)\s*:/iu.test(css)) {
   fail("styles.css", "must include a responsive width media query");
 }
-if (!/min-height\s*:\s*48px/iu.test(css)) {
-  fail("styles.css", "interactive controls must preserve a 48px minimum target height");
+function minimumHeightsFor(selector) {
+  const values = [];
+  for (const rule of css.matchAll(/([^{}]+)\{([^{}]*)\}/gu)) {
+    const selectors = rule[1].split(",").map((value) => value.trim());
+    if (!selectors.includes(selector)) continue;
+    for (const declaration of rule[2].matchAll(/min-height\s*:\s*([\d.]+)px/giu)) {
+      values.push(Number(declaration[1]));
+    }
+  }
+  return values;
+}
+for (const selector of [
+  ".brand",
+  ".button",
+  ".site-nav a",
+  ".site-nav .button",
+  ".button-row .button",
+  ".faq-list summary",
+  ".footer-nav a",
+  ".social-links a",
+]) {
+  const heights = minimumHeightsFor(selector);
+  if (!heights.length || heights.some((height) => height < 48)) {
+    fail("styles.css", `${selector} must preserve a 48px minimum target height`);
+  }
+}
+
+function relativeLuminance(hex) {
+  const channels = hex
+    .slice(1)
+    .match(/.{2}/gu)
+    .map((value) => Number.parseInt(value, 16) / 255)
+    .map((value) =>
+      value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4,
+    );
+  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+}
+function contrastRatio(first, second) {
+  const luminances = [relativeLuminance(first), relativeLuminance(second)].sort(
+    (left, right) => right - left,
+  );
+  return (luminances[0] + 0.05) / (luminances[1] + 0.05);
+}
+const colorTokens = new Map(
+  [...css.matchAll(/(--[\w-]+)\s*:\s*(#[\da-f]{6})/giu)].map((match) => [
+    match[1],
+    match[2],
+  ]),
+);
+for (const [foreground, background] of [
+  ["--button-ink", "--coral"],
+  ["--button-ink", "--coral-soft"],
+  ["--paper", "--clay-dark"],
+  ["--coral-dark", "--cream"],
+]) {
+  const first = colorTokens.get(foreground);
+  const second = colorTokens.get(background);
+  if (!first || !second || contrastRatio(first, second) < 4.5) {
+    fail("styles.css", `${foreground} on ${background} must meet 4.5:1 contrast`);
+  }
 }
 
 let totalAssetBytes = 0;
