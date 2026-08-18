@@ -1021,18 +1021,18 @@ const productPageRequirements = new Map([
   [
     "products.html",
     {
-      title: "Product Family | VeryLoving",
-      h1: "Two directions for warmer companionship",
+      title: "Products | VeryLoving",
+      h1: "Choose your VeryLoving experience",
       breadcrumbLinks: [],
       breadcrumbCurrent: "Products",
       copy: [
-        "Guardian System vision",
-        "A Guardian System vision—not one operating system today",
+        "VeryLoving products",
+        "Personal safety, with a more human touch",
         "NorthStar wearable",
         "Home Companion",
         "Company-reported milestones",
         "not evidence of medical validation, product readiness, or a guaranteed safety result.",
-        "Warmth, with clear boundaries",
+        "Explore the VeryLoving family",
       ],
       minimumFeatures: 3,
       needsRules: true,
@@ -1047,26 +1047,31 @@ const productPageRequirements = new Map([
         "assets/ces-badge.avif",
         "assets/guardian-star.avif",
       ],
-      prohibitedCopy: [],
+      prohibitedCopy: [
+        "maturity",
+        "release-gated",
+        "engineering-stage",
+        "static research surface",
+      ],
     },
   ],
   [
     "wearable.html",
     {
       title: "NorthStar Wearable | VeryLoving",
-      h1: "More than an accessory",
+      h1: "More than jewelry",
       breadcrumbLinks: ["products.html"],
       breadcrumbCurrent: "Personal wearable",
       copy: [
-        "Under development",
-        "A development path, not a safety promise",
-        "NorthStar does not provide emergency help.",
+        "NorthStar wearable",
+        "Designed to work with your phone",
         "Meet Capybear",
-        "Designed to feel personal, not clinical",
+        "Wear peace of mind",
         "Share only when you choose",
-        "A gesture opens. You decide what happens next.",
-        "What NorthStar does not claim",
-        "No verified public battery, radio-range, water-resistance, or material specification.",
+        "How NorthStar is designed to work",
+        "NorthStar is designed to work with your phone",
+        "Full product specifications will be shared before launch.",
+        "Mobile beta access",
       ],
       minimumFeatures: 3,
       needsRules: true,
@@ -1086,27 +1091,27 @@ const productPageRequirements = new Map([
         "keeps you safe",
         "automatic protection",
         "recognizes your emotions",
+        "engineering-stage",
+        "account-scoped",
+        "authenticated hardware proof",
       ],
     },
   ],
   [
     "home-companion.html",
     {
-      title: "Home Companion Research | VeryLoving",
-      h1: "A future companion for the home",
+      title: "Home Companion | VeryLoving",
+      h1: "Bringing warmer companionship home",
       breadcrumbLinks: ["products.html"],
-      breadcrumbCurrent: "Home companion research",
+      breadcrumbCurrent: "Home Companion",
       copy: [
-        "Research only",
-        "The current experience is a static research surface",
-        "No physical Home Companion is connected.",
+        "A future VeryLoving concept",
+        "Home Companion is an early research concept and is not available today.",
         "Friendly, not industrial",
-        "Choice before automation",
-        "Personalization needs consent",
-        "The concept does not recognize emotions",
-        "Trust must be designed before a device",
-        "No physical integration",
-        "no robot transport",
+        "Helpful, always on your terms",
+        "Designed to support connection",
+        "Respect belongs at the heart of the home",
+        "From idea to home, one step at a time",
       ],
       minimumFeatures: 4,
       needsRules: false,
@@ -1128,10 +1133,41 @@ const productPageRequirements = new Map([
         "resemble loved ones",
         "controls your home",
         "monitors your home",
+        "static research surface",
+        "no physical integration",
+        "no robot transport",
       ],
     },
   ],
 ]);
+
+const frozenProductSections = [
+  {
+    page: "products.html",
+    label: "approved company-milestones section",
+    pattern: /<section class="feature product-feature product-milestone"[\s\S]*?<\/section>/u,
+    sha256: "9d1778263c5876d6782ed7e403bbb1798ae6d99490f5594706470860c1fd2831",
+  },
+  {
+    page: "wearable.html",
+    label: "approved Quick Share section",
+    pattern: /<section class="feature product-feature" aria-labelledby="sharing-title">[\s\S]*?<\/section>/u,
+    sha256: "50603757fe16c62f0383b0b6f8e1088093fe5cdac7619dea99214eeca421ce0c",
+  },
+];
+
+for (const frozen of frozenProductSections) {
+  const source = pages.get(frozen.page) ?? "";
+  const section = source.match(frozen.pattern)?.[0];
+  if (!section) {
+    fail(frozen.page, `must retain the ${frozen.label}`);
+    continue;
+  }
+  const actualHash = createHash("sha256").update(section).digest("hex");
+  if (actualHash !== frozen.sha256) {
+    fail(frozen.page, `must leave the ${frozen.label} unchanged`);
+  }
+}
 
 for (const [page, requirements] of productPageRequirements) {
   const source = pages.get(page) ?? "";
@@ -1256,15 +1292,15 @@ for (const [page, requirements] of productPageRequirements) {
 
 const productOverview = pages.get("products.html") ?? "";
 for (const requiredCopy of [
-  "Mobile AI + foreground map",
-  "It is not a monitoring or emergency service",
+  "Connected jewelry designed for warmth, confidence, and everyday companionship.",
+  "A future product vision centered on warmth and companionship at home.",
 ]) {
   if (!normalizedText(productOverview).includes(requiredCopy)) {
     fail("products.html", `must retain the product-status boundary ${JSON.stringify(requiredCopy)}`);
   }
 }
 if (valuesFor(productOverview, "a", "href").some((href) => href.startsWith("https://buy.stripe.com/"))) {
-  fail("products.html", "the product overview must not collapse both maturity levels into a checkout");
+  fail("products.html", "the product overview must not add an unreviewed checkout");
 }
 
 const wearablePage = pages.get("wearable.html") ?? "";
@@ -1272,10 +1308,36 @@ const wearableCheckoutLinks = valuesFor(wearablePage, "a", "href").filter((href)
   href.startsWith("https://buy.stripe.com/"),
 );
 if (
-  wearableCheckoutLinks.length !== 2 ||
+  wearableCheckoutLinks.length !== 1 ||
   wearableCheckoutLinks.some((href) => href !== HOME_STRIPE_URL)
 ) {
-  fail("wearable.html", `both wearable checkout controls must use ${HOME_STRIPE_URL}`);
+  fail("wearable.html", `the wearable checkout control must use ${HOME_STRIPE_URL}`);
+}
+
+const appDownloadButtons = pairedElements(wearablePage, "button").filter((button) =>
+  hasClass(button.attrs, "app-download-button"),
+);
+const expectedDownloadLabels = ["iOS TestFlight Coming soon", "Android Coming soon"];
+if (
+  appDownloadButtons.length !== expectedDownloadLabels.length ||
+  appDownloadButtons.some(
+    (button, index) =>
+      button.attrs.get("type") !== "button" ||
+      !button.attrs.has("disabled") ||
+      normalizedText(button.body) !== expectedDownloadLabels[index],
+  )
+) {
+  fail("wearable.html", "must show disabled iOS TestFlight and Android coming-soon controls");
+}
+if (
+  !normalizedText(wearablePage).includes(
+    "NorthStar connectivity remains in development and is not part of the mobile beta.",
+  )
+) {
+  fail("wearable.html", "must distinguish the mobile beta from NorthStar connectivity");
+}
+if (valuesFor(wearablePage, "a", "href").some((href) => href.includes("testflight.apple.com"))) {
+  fail("wearable.html", "must not publish a TestFlight link until its exact invitation URL is approved");
 }
 
 const homeCompanionPage = pages.get("home-companion.html") ?? "";
@@ -1526,6 +1588,8 @@ for (const selector of [
   ".product-rule-row",
   ".product-boundary-band",
   ".product-cta",
+  ".app-download-actions",
+  ".app-download-button",
   ".concept-home-graphic",
 ]) {
   if (!productCss.includes(selector)) {
@@ -1542,6 +1606,7 @@ for (const [pattern, requirement] of [
   [/\.product-pill\s*\{[^}]*position\s*:\s*static[^}]*min-height\s*:\s*55px/isu, "keep product controls in flow and at least 55px tall on desktop"],
   [/\.product-feature-pill\s*\{[^}]*position\s*:\s*static/isu, "keep split-feature controls in flow at phone widths"],
   [/\.product-text-link\s*\{[^}]*min-height\s*:\s*48px/isu, "keep desktop secondary product controls at least 48px tall"],
+  [/\.app-download-button\s*\{[^}]*min-width\s*:\s*210px[^}]*min-height\s*:\s*58px[^}]*background\s*:\s*var\(--yellow\)/isu, "style honest coming-soon app controls with the official pill language"],
   [/\.product-page\s+main\s*\{[^}]*--product-button-ink\s*:\s*#4d2f1d/isu, "define a readable product CTA ink"],
   [/\.product-page\s+main\s+\.pill-coral\s*\{[^}]*color\s*:\s*var\(--product-button-ink\)/isu, "keep coral product CTA text at accessible contrast"],
   [/\.feature-copy:not\(\.feature-copy-dark\)\s+\.product-feature-pill\s*\{[^}]*color\s*:\s*var\(--product-button-ink\)/isu, "keep coral split-feature CTA text at accessible contrast"],
@@ -1552,7 +1617,7 @@ for (const [pattern, requirement] of [
   if (!pattern.test(productCss)) fail("product-pages.css", `must ${requirement}`);
 }
 
-for (const background of ["#f58556", "#ff9b70"]) {
+for (const background of ["#f58556", "#ff9b70", "#f8e5b7"]) {
   const ratio = contrastRatio("#4d2f1d", background);
   if (ratio < 4.5) {
     fail(

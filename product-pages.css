@@ -556,6 +556,47 @@
   line-height: 1.3;
 }
 
+.product-cta-copy {
+  width: min(720px, 100%);
+  margin: -18px 0 30px;
+  color: var(--brown-dark);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.app-download-actions {
+  margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.app-download-button {
+  min-width: 210px;
+  min-height: 58px;
+  flex-direction: column;
+  padding: 7px 26px;
+  border: 0;
+  background: var(--yellow);
+  color: var(--product-button-ink);
+  font-family: inherit;
+  line-height: 1.15;
+  opacity: 1;
+  cursor: not-allowed;
+  -webkit-text-fill-color: var(--product-button-ink);
+}
+
+.app-download-button span {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.app-download-button small {
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
 @media (max-width: 1000px) {
   .product-hero {
     width: calc(100% - 84px);
@@ -711,6 +752,17 @@
     width: 53.25vw;
     margin-bottom: 28px;
     font-size: 3.984vw;
+  }
+
+  .product-cta-copy {
+    width: 53.25vw;
+    margin: -12px 0 22px;
+    font-size: 15px;
+  }
+
+  .app-download-button {
+    min-width: 180px;
+    min-height: 52px;
   }
 }
 
@@ -1001,6 +1053,23 @@
     font-size: min(7.6923vw, 46px);
     line-height: 1.3;
   }
+
+  .product-cta-copy {
+    width: 79.451vw;
+    margin: -3vw 0 6vw;
+    font-size: clamp(13px, 4.2666vw, 18px);
+    line-height: 1.6;
+  }
+
+  .app-download-actions {
+    width: 78.666vw;
+    flex-direction: column;
+  }
+
+  .app-download-button {
+    width: 100%;
+    min-height: 50px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1011,6 +1080,10 @@
   .product-actions .product-text-link {
     width: fit-content;
     margin-top: 8px;
+  }
+
+  .app-download-button {
+    min-width: 0;
   }
 }
 
@@ -1039,7 +1112,8 @@
   }
 
   .product-pill,
-  .product-feature-pill {
+  .product-feature-pill,
+  .app-download-button {
     border: 1px solid ButtonText;
   }
 }
