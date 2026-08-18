@@ -300,6 +300,14 @@ function normalizedElement(source, tagName, className) {
     return element.markup
       .replace(/\s+aria-current\s*=\s*(["'])page\1/giu, "")
       .replace(/\s+>/gu, ">")
+      .replace(
+        /(<(?:section|div|h[1-6]|p|nav|footer|header|main)\b[^>]*>)\s+/giu,
+        "$1",
+      )
+      .replace(
+        /\s+(<\/(?:section|div|h[1-6]|p|nav|footer|header|main)>)/giu,
+        "$1",
+      )
       .replace(/>\s+</gu, "><")
       .replace(/\s+/gu, " ")
       .trim();
@@ -842,6 +850,12 @@ if (questionElements.length !== faqItems.length) {
 if (panelElements.length !== faqItems.length) {
   fail("faq.html", `must contain exactly ${faqItems.length} .faq-panel regions`);
 }
+if (panelElements[0] && !hasClass(panelElements[0].attrs, "faq-panel-featured")) {
+  fail("faq.html", "the first FAQ answer must retain its featured 240px panel treatment");
+}
+if (panelElements.slice(1).some((panel) => hasClass(panel.attrs, "faq-panel-featured"))) {
+  fail("faq.html", "only the first FAQ answer may use the featured panel treatment");
+}
 
 for (let index = 0; index < faqItems.length; index += 1) {
   const expected = faqItems[index];
@@ -1104,6 +1118,8 @@ for (const [pattern, requirement] of [
   [/\.site-footer\s*\{[^}]*justify-content\s*:\s*flex-end/isu, "bottom-anchor the phone footer stack"],
   [/\.footer-column\s+a\s*\{[^}]*min-height\s*:\s*24px[^}]*\}\s*\.footer-column\s+a\s*\+\s*a\s*>\s*span/isu, "retain 24px mobile footer targets without shifting the official baselines"],
   [/\.faq-question\[aria-expanded=["']true["']\]\s+\.faq-chevron::before/isu, "show the expanded FAQ chevron state"],
+  [/\.faq-panel-featured\s*>\s*div\s*\{[^}]*min-height\s*:\s*0/isu, "let the featured FAQ grid row collapse before it animates"],
+  [/\.faq-panel-featured\s+p\s*\{[^}]*min-height\s*:\s*240px/isu, "preserve the official featured FAQ open height"],
   [/box-shadow\s*:\s*0\s+0\s+0\s+3px\s+#fff/iu, "use a two-tone keyboard focus indicator"],
   [/@media\s*\([^)]*min-width\s*:\s*1001px[^)]*\)\s*and\s*\([^)]*max-height\s*:\s*850px[^)]*\)[^{]*\{[\s\S]*?\.home-page\s+\.header-preorder\s*\{[^}]*position\s*:\s*absolute[\s\S]*?\.home-page\s+\.preorder-dock\s*\{[^}]*position\s*:\s*relative/iu, "keep preorder controls in flow on short desktop viewports"],
 ]) {

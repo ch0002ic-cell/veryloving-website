@@ -704,13 +704,14 @@ main[tabindex="-1"]:focus {
 }
 
 .faq-panel-featured > div {
-  min-height: 240px;
+  min-height: 0;
   padding: 0;
 }
 
 .faq-panel-featured p {
   position: relative;
   top: 0.896vw;
+  min-height: 240px;
   font-size: 19px;
   line-height: 26.6px;
 }
