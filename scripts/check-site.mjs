@@ -1089,8 +1089,15 @@ if (!/@media\s*\([^)]*(?:min-width|max-width)\s*:\s*1000px[^)]*\)/iu.test(css)) 
 }
 for (const [pattern, requirement] of [
   [/\.home-hero\s*\{[^}]*height\s*:\s*146\.735vw/isu, "scale the phone hero fluidly"],
+  [/\.hero-products\s*\{[^}]*pointer-events\s*:\s*none/isu, "keep decorative hero artwork from blocking the Follow link"],
   [/\.feature-connect\s*\{[^}]*height\s*:\s*180\.1vw/isu, "scale phone feature sections fluidly"],
   [/\.how-it-works\s*\{[^}]*height\s*:\s*max\(80\.273vw,\s*47\.77vh\)/isu, "preserve the official responsive How-it-works stage"],
+  [/\.how-it-works\s*\{[^}]*height\s*:\s*max\(473\.8828125px,\s*53\.735vw\)[^}]*overflow\s*:\s*visible/isu, "keep the tablet How-it-works artwork unclipped"],
+  [/\.how-it-works\s*\{[^}]*height\s*:\s*max\(634\.1875px,\s*calc\(533\.008px\s*\+\s*7\.90516vw\),\s*45\.1594vw\)[^}]*overflow\s*:\s*visible/isu, "keep the desktop How-it-works artwork aligned and unclipped"],
+  [/\.how-it-works\s+img\s*\{[^}]*position\s*:\s*relative/isu, "paint overflowing How-it-works artwork above the following cream section"],
+  [/@media\s*\([^)]*min-width\s*:\s*1001px[^)]*\)\s*and\s*\([^)]*max-width\s*:\s*1439px[^)]*\)[^{]*\{[\s\S]*?\.home-hero\s*\{[^}]*width\s*:\s*78\.125vw[\s\S]*?\.hero-charm\s*\{[^}]*left\s*:\s*55\.317361vw[^}]*width\s*:\s*28\.271528vw/iu, "keep the intermediate desktop hero inside the viewport"],
+  [/\.primary-nav\s*\{[^}]*margin-right\s*:\s*min\(175px,\s*calc\(\(1535px\s*-\s*100vw\)\s*\/\s*2\)\)/isu, "keep FAQ clear of the preorder control on intermediate desktops"],
+  [/\.feature-copy\s*\{[^}]*min-width\s*:\s*0/isu, "allow intermediate desktop feature copy to shrink inside its grid track"],
   [/\.social-giveaway\s*\{[^}]*height\s*:\s*40\.465vh/isu, "preserve the official responsive social stage"],
   [/\.faq-list\s*\{[^}]*width\s*:\s*85\.277vw/isu, "keep the phone FAQ list fluid"],
   [/\.guardian-signup\s*\{[^}]*height\s*:\s*81\.94vw/isu, "keep the shared phone signup fluid"],
@@ -1098,6 +1105,7 @@ for (const [pattern, requirement] of [
   [/\.footer-column\s+a\s*\{[^}]*min-height\s*:\s*24px[^}]*\}\s*\.footer-column\s+a\s*\+\s*a\s*>\s*span/isu, "retain 24px mobile footer targets without shifting the official baselines"],
   [/\.faq-question\[aria-expanded=["']true["']\]\s+\.faq-chevron::before/isu, "show the expanded FAQ chevron state"],
   [/box-shadow\s*:\s*0\s+0\s+0\s+3px\s+#fff/iu, "use a two-tone keyboard focus indicator"],
+  [/@media\s*\([^)]*min-width\s*:\s*1001px[^)]*\)\s*and\s*\([^)]*max-height\s*:\s*850px[^)]*\)[^{]*\{[\s\S]*?\.home-page\s+\.header-preorder\s*\{[^}]*position\s*:\s*absolute[\s\S]*?\.home-page\s+\.preorder-dock\s*\{[^}]*position\s*:\s*relative/iu, "keep preorder controls in flow on short desktop viewports"],
 ]) {
   if (!pattern.test(css)) fail("styles.css", `must ${requirement}`);
 }

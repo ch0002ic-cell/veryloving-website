@@ -223,6 +223,7 @@ main[tabindex="-1"]:focus {
   top: -28px;
   left: -52px;
   height: 430px;
+  pointer-events: none;
 }
 
 .hero-products img {
@@ -396,6 +397,7 @@ main[tabindex="-1"]:focus {
 }
 
 .how-it-works img {
+  position: relative;
   width: min(1206px, 100%);
   height: auto;
 }
@@ -891,8 +893,10 @@ th {
   }
 
   .how-it-works {
-    align-items: flex-start;
+    height: max(634.1875px, calc(533.008px + 7.90516vw), 45.1594vw);
+    align-items: flex-end;
     justify-content: flex-start;
+    overflow: visible;
   }
 
   .how-it-works img {
@@ -900,6 +904,7 @@ th {
     max-width: none;
     height: 46.824vw;
     margin-left: 8.7533vw;
+    margin-bottom: -1.66453vw;
   }
 
   .feature-wear .feature-media img {
@@ -1050,6 +1055,65 @@ th {
   .preorder-dock a {
     position: relative;
     top: 0.640625px;
+  }
+}
+
+/* Scale the 1440px desktop canvas before it reaches the tablet breakpoint so
+   artwork and copy stay inside the viewport instead of being clipped. */
+@media (min-width: 1001px) and (max-width: 1439px) {
+  .primary-nav {
+    margin-right: min(175px, calc((1535px - 100vw) / 2));
+  }
+
+  .home-hero {
+    width: 78.125vw;
+    grid-template-columns: 40.972222vw 1fr;
+  }
+
+  .hero-copy,
+  .hero-copy h1,
+  .hero-copy p {
+    width: 40.972222vw;
+  }
+
+  .hero-phone {
+    left: 43.119444vw;
+    width: 13.398611vw;
+  }
+
+  .hero-charm {
+    right: auto;
+    left: 55.317361vw;
+    width: 28.271528vw;
+  }
+
+  .feature-copy {
+    min-width: 0;
+  }
+
+  .feature-connect .feature-copy h2 {
+    width: 37.127083vw;
+  }
+
+  .feature-connect .feature-copy p {
+    width: 36.973611vw;
+  }
+
+  .feature-wear .feature-copy h2,
+  .feature-wear .feature-copy p,
+  .feature-alert .feature-copy h2,
+  .feature-alert .feature-copy p {
+    width: 37.020833vw;
+  }
+
+  .feature-location .feature-copy h2 {
+    width: 39.236111vw;
+    max-width: none;
+  }
+
+  .feature-location .feature-copy p {
+    width: 35.277778vw;
+    max-width: none;
   }
 }
 
@@ -1297,9 +1361,10 @@ th {
   }
 
   .how-it-works {
-    height: calc(7.966vw + 412.711px);
+    height: max(473.8828125px, 53.735vw);
     align-items: flex-start;
     justify-content: flex-start;
+    overflow: visible;
   }
 
   .how-it-works img {
@@ -1878,6 +1943,29 @@ th {
   .narrow { width: calc(100% - 48px); }
   .document-shell { padding-bottom: 64px; font-size: 15px; }
   .document-shell h2 { font-size: 24px; }
+}
+
+/* Keep the official preorder controls without covering product content on
+   short desktop viewports such as laptop browser windows. */
+@media (min-width: 1001px) and (max-height: 850px),
+  (min-width: 1441px) and (max-height: calc(46.824vw + 111px)) {
+  .home-page {
+    padding-bottom: 0;
+  }
+
+  .home-page .site-header {
+    position: relative;
+  }
+
+  .home-page .header-preorder {
+    position: absolute;
+  }
+
+  .home-page .preorder-dock {
+    position: relative;
+    left: auto;
+    bottom: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
