@@ -1347,6 +1347,19 @@ if (valuesFor(homeCompanionPage, "a", "href").some((href) => href.startsWith("ht
 if (/<(?:form|button|input|video|iframe)\b/iu.test(homeCompanionPage)) {
   fail("home-companion.html", "research-only Home Companion must remain a static information page");
 }
+const homeBoundaryRows = pairedElements(homeCompanionPage, "p").filter(
+  (paragraph) => paragraph.attrs.get("role") === "listitem",
+);
+if (
+  homeBoundaryRows.length !== 4 ||
+  homeBoundaryRows.some(
+    (row) =>
+      pairedElements(row.body, "strong").length !== 1 ||
+      pairedElements(row.body, "span").length !== 1,
+  )
+) {
+  fail("home-companion.html", "trust rows must use one consistent label and detail column");
+}
 
 const siteText = shippedHtml.join("\n");
 const residuePatterns = [
@@ -1610,6 +1623,7 @@ for (const [pattern, requirement] of [
   [/\.product-page\s+main\s*\{[^}]*--product-button-ink\s*:\s*#4d2f1d/isu, "define a readable product CTA ink"],
   [/\.product-page\s+main\s+\.pill-coral\s*\{[^}]*color\s*:\s*var\(--product-button-ink\)/isu, "keep coral product CTA text at accessible contrast"],
   [/\.feature-copy:not\(\.feature-copy-dark\)\s+\.product-feature-pill\s*\{[^}]*color\s*:\s*var\(--product-button-ink\)/isu, "keep coral split-feature CTA text at accessible contrast"],
+  [/\.home-companion-page\s+\.product-boundary-list\s*>\s*p\s*\{[^}]*display\s*:\s*grid[^}]*grid-template-columns\s*:\s*168px\s+minmax\(0,\s*1fr\)[^}]*align-items\s*:\s*start[^}]*gap\s*:\s*28px/isu, "align the Home Companion trust rows to one label and detail grid"],
   [/\.product-rule-list\s*\{[^}]*width\s*:\s*756\.66px/isu, "reuse the official desktop FAQ measure for ruled information"],
   [/\.product-rule-row\s*\{[^}]*padding\s*:\s*16px\s+0/isu, "reuse the official FAQ row rhythm"],
   [/\.product-feature\s*\{[^}]*min-height\s*:\s*599px/isu, "reuse the official full-bleed feature proportion"],
