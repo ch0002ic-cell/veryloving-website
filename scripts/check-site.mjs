@@ -24,6 +24,31 @@ const expectedPages = new Map([
     "privacy.html",
     "https://ch0002ic-cell.github.io/veryloving-website/privacy.html",
   ],
+  [
+    "products.html",
+    "https://ch0002ic-cell.github.io/veryloving-website/products.html",
+  ],
+  [
+    "wearable.html",
+    "https://ch0002ic-cell.github.io/veryloving-website/wearable.html",
+  ],
+  [
+    "home-companion.html",
+    "https://ch0002ic-cell.github.io/veryloving-website/home-companion.html",
+  ],
+]);
+
+const originalPages = new Set([
+  "index.html",
+  "faq.html",
+  "privacy.html",
+  "accessibility-statement.html",
+]);
+
+const productPages = new Set([
+  "products.html",
+  "wearable.html",
+  "home-companion.html",
 ]);
 
 const expectedAssets = new Map([
@@ -93,6 +118,7 @@ const expectedFiles = new Set([
   ...expectedFonts.keys(),
   "package.json",
   "scripts/check-site.mjs",
+  "product-pages.css",
   "site.js",
   "styles.css",
 ]);
@@ -412,7 +438,7 @@ const wantedPages = [...expectedPages.keys()].sort();
 if (JSON.stringify(htmlFiles) !== JSON.stringify(wantedPages)) {
   fail(
     "site",
-    `must contain exactly these four HTML pages: ${wantedPages.join(", ")} (found: ${htmlFiles.join(", ") || "none"})`,
+    `must contain exactly these ${wantedPages.length} HTML pages: ${wantedPages.join(", ")} (found: ${htmlFiles.join(", ") || "none"})`,
   );
 }
 
@@ -475,11 +501,14 @@ for (const [page, canonical] of expectedPages) {
   const styleLinks = tags(source, "link").filter((tag) =>
     (attributes(tag).get("rel") ?? "").split(/\s+/u).includes("stylesheet"),
   );
-  if (
-    styleLinks.length !== 1 ||
-    attributes(styleLinks[0]).get("href") !== "styles.css"
-  ) {
-    fail(page, "must load exactly one stylesheet, the local styles.css");
+  const expectedStyles = originalPages.has(page)
+    ? ["styles.css"]
+    : productPages.has(page)
+      ? ["styles.css", "product-pages.css"]
+      : [];
+  const actualStyles = styleLinks.map((tag) => attributes(tag).get("href") ?? "");
+  if (JSON.stringify(actualStyles) !== JSON.stringify(expectedStyles)) {
+    fail(page, `must load the reviewed stylesheets in order: ${expectedStyles.join(", ")}`);
   }
 
   const iconLinks = tags(source, "link").filter((tag) =>
@@ -643,7 +672,7 @@ for (const [page, canonical] of expectedPages) {
     fail(page, "hidden forms, inputs, and textareas are not part of the rendered static suite");
   }
   if (/<style\b/iu.test(source) || /\sstyle\s*=/iu.test(source)) {
-    fail(page, "all presentation must remain in the shared styles.css");
+    fail(page, "all presentation must remain in reviewed local stylesheets");
   }
   if (/\son[a-z]+\s*=/iu.test(source)) fail(page, "inline event handlers are not permitted");
   if (/(?:href|src|action)\s*=\s*(["'])(?:javascript:|data:|\/\/|\/)/iu.test(source)) {
@@ -953,6 +982,130 @@ for (const legalPage of ["privacy.html", "accessibility-statement.html"]) {
   }
 }
 
+const productPageRequirements = new Map([
+  [
+    "products.html",
+    {
+      title: "Product Family | VeryLoving",
+      h1: "Companionship that moves with you—and grows with home",
+      activeHref: "products.html",
+      copy: [
+        "Under development",
+        "NorthStar wearable",
+        "Research only",
+        "Home Companion",
+        "No physical robot, sensor, or remote control system is connected today.",
+        "Warmth, with clear boundaries",
+      ],
+    },
+  ],
+  [
+    "wearable.html",
+    {
+      title: "NorthStar Wearable | VeryLoving",
+      h1: "A wearable companion, led by your choices",
+      activeHref: "wearable.html",
+      copy: [
+        "Under development",
+        "NorthStar does not provide emergency help. Gestures only open phone screens; they do not automatically start audio, share location, or contact anyone.",
+        "A development path, not a safety promise",
+        "A single tap can open the AI companion screen. You still choose when to press Start and begin a conversation.",
+        "Opening the phone’s share sheet does not prove that another person received the location.",
+        "What NorthStar does not claim",
+        "No automatic SOS, emergency calling, contact notification, or delivery receipt.",
+      ],
+    },
+  ],
+  [
+    "home-companion.html",
+    {
+      title: "Home Companion Research | VeryLoving",
+      h1: "A future companion for the home",
+      activeHref: "home-companion.html",
+      copy: [
+        "Research only",
+        "Static research concept",
+        "No physical Home Companion is connected.",
+        "Warm presence",
+        "Supportive routines",
+        "Human connection",
+        "No physical integration",
+        "No physical-device availability claim",
+      ],
+    },
+  ],
+]);
+
+for (const [page, requirements] of productPageRequirements) {
+  const source = pages.get(page) ?? "";
+  const pageText = normalizedText(source);
+  const h1 = pairedElements(source, "h1").map((element) => normalizedText(element.body));
+  if (titles.get(page) !== requirements.title) {
+    fail(page, `title must be exactly ${JSON.stringify(requirements.title)}`);
+  }
+  if (h1.length === 1 && h1[0] !== requirements.h1) {
+    fail(page, `h1 must be exactly ${JSON.stringify(requirements.h1)}`);
+  }
+  checkOrderedCopy(page, pageText, requirements.copy);
+
+  const productNavElement = elementsWithClass(source, "nav", "product-nav")[0];
+  const productNav = productNavElement?.markup ?? "";
+  if (!productNavElement) {
+    fail(page, "must contain the shared product-family navigation");
+  } else {
+    const productLinks = valuesFor(productNav, "a", "href");
+    const expectedProductLinks = [
+      "products.html",
+      "wearable.html",
+      "home-companion.html",
+    ];
+    if (JSON.stringify(productLinks) !== JSON.stringify(expectedProductLinks)) {
+      fail(page, "product-family navigation must link to all three product pages in order");
+    }
+    const activeLinks = tags(productNav, "a")
+      .map(attributes)
+      .filter((attrs) => attrs.get("aria-current") === "page");
+    if (
+      activeLinks.length !== 1 ||
+      activeLinks[0].get("href") !== requirements.activeHref
+    ) {
+      fail(page, `product-family navigation must mark ${requirements.activeHref} current`);
+    }
+  }
+}
+
+const productOverview = pages.get("products.html") ?? "";
+for (const requiredCopy of [
+  "Mobile AI + foreground map",
+  "It is not a monitoring or emergency service.",
+]) {
+  if (!normalizedText(productOverview).includes(requiredCopy)) {
+    fail("products.html", `must retain the product-status boundary ${JSON.stringify(requiredCopy)}`);
+  }
+}
+if (valuesFor(productOverview, "a", "href").some((href) => href.startsWith("https://buy.stripe.com/"))) {
+  fail("products.html", "the product overview must not collapse both maturity levels into a checkout");
+}
+
+const wearablePage = pages.get("wearable.html") ?? "";
+const wearableCheckoutLinks = valuesFor(wearablePage, "a", "href").filter((href) =>
+  href.startsWith("https://buy.stripe.com/"),
+);
+if (
+  wearableCheckoutLinks.length !== 2 ||
+  wearableCheckoutLinks.some((href) => href !== HOME_STRIPE_URL)
+) {
+  fail("wearable.html", `both wearable checkout controls must use ${HOME_STRIPE_URL}`);
+}
+
+const homeCompanionPage = pages.get("home-companion.html") ?? "";
+if (valuesFor(homeCompanionPage, "a", "href").some((href) => href.startsWith("https://buy.stripe.com/"))) {
+  fail("home-companion.html", "research-only Home Companion must not include a checkout");
+}
+if (/<(?:form|button|input|video|iframe)\b/iu.test(homeCompanionPage)) {
+  fail("home-companion.html", "research-only Home Companion must remain a static information page");
+}
+
 const siteText = shippedHtml.join("\n");
 const residuePatterns = [
   [/_api\//iu, "captured API path"],
@@ -1152,6 +1305,66 @@ for (const match of css.matchAll(/url\(\s*(["']?)([^"')]+)\1\s*\)/giu)) {
   }
 }
 
+let productCss = "";
+try {
+  productCss = await readFile(path.join(root, "product-pages.css"), "utf8");
+} catch (error) {
+  fail("product-pages.css", `cannot be read (${error.message})`);
+}
+for (const [pattern, label] of residuePatterns) {
+  if (pattern.test(productCss)) fail("product-pages.css", `${label} must not be present`);
+}
+if (/@import\b/iu.test(productCss) || /url\(\s*(["']?)https?:/iu.test(productCss)) {
+  fail("product-pages.css", "must not load external styles, fonts, or images");
+}
+for (const selector of [
+  ".product-nav",
+  ".product-hero",
+  ".status-chip",
+  ".concept-companion",
+  ".interaction-steps",
+  ".research-boundary",
+  ".research-card-grid",
+]) {
+  if (!productCss.includes(selector)) {
+    fail("product-pages.css", `must define ${selector}`);
+  }
+}
+for (const [pattern, requirement] of [
+  [/@media\s*\(max-width:\s*1000px\)/iu, "include the shared tablet breakpoint"],
+  [/@media\s*\(max-width:\s*750px\)/iu, "include the shared phone breakpoint"],
+  [/@media\s*\(prefers-reduced-motion:\s*reduce\)/iu, "respect reduced motion"],
+  [/@media\s*\(forced-colors:\s*active\)/iu, "support forced colors"],
+  [/\.product-button\s*\{[^}]*min-height\s*:\s*52px/isu, "keep primary product controls at least 52px tall"],
+  [/\.product-nav\s+a\s*\{[^}]*min-height\s*:\s*44px/isu, "keep desktop product navigation targets at least 44px tall"],
+  [/\.step-number\s*\{[^}]*color\s*:\s*#9f442c/isu, "keep interaction-step numbers legible"],
+  [/\.research-boundary\s+p\s*\{[^}]*color\s*:\s*#6b5c4d/isu, "keep research-boundary copy legible"],
+  [/\.product-page\s+\.guardian-signup\s*\{[^}]*background\s*:\s*#8b614f/isu, "keep the new-page signup band legible"],
+]) {
+  if (!pattern.test(productCss)) fail("product-pages.css", `must ${requirement}`);
+}
+for (const match of productCss.matchAll(/url\(\s*(["']?)([^"')]+)\1\s*\)/giu)) {
+  const reference = match[2].trim();
+  if (!reference || reference.startsWith("#")) continue;
+  if (/^(?:data:|https?:|\/\/|\/)/iu.test(reference)) {
+    fail("product-pages.css", `unsupported CSS URL ${reference}`);
+    continue;
+  }
+  const target = path.resolve(root, reference.split(/[?#]/u, 1)[0]);
+  if (target !== root && !target.startsWith(`${root}${path.sep}`)) {
+    fail("product-pages.css", `CSS URL escapes the site root: ${reference}`);
+    continue;
+  }
+  try {
+    const targetStat = await stat(target);
+    if (!targetStat.isFile()) {
+      fail("product-pages.css", `CSS URL is not a file: ${reference}`);
+    }
+  } catch {
+    fail("product-pages.css", `broken CSS URL: ${reference}`);
+  }
+}
+
 let totalAssetBytes = 0;
 for (const [asset, expected] of expectedAssets) {
   const absolute = path.join(root, asset);
@@ -1206,7 +1419,7 @@ for (const [font, maximumBytes] of expectedFonts) {
   }
 }
 
-const shippedSources = `${siteText}\n${css}`;
+const shippedSources = `${siteText}\n${css}\n${productCss}`;
 for (const asset of [...expectedAssets.keys(), ...expectedFonts.keys()]) {
   if (!shippedSources.includes(asset)) fail(asset, "must be referenced by the shipped site");
 }
