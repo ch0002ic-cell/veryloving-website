@@ -486,12 +486,21 @@ for (const [page, canonical] of expectedPages) {
 
   const scriptTags = tags(source, "script");
   const scriptElements = pairedElements(source, "script");
-  if (scriptTags.length !== 1 || scriptElements.length !== 1) {
-    fail(page, "must load exactly one script");
-  } else {
+  const needsAccordionScript = page === "faq.html";
+  if (
+    scriptTags.length !== (needsAccordionScript ? 1 : 0) ||
+    scriptElements.length !== (needsAccordionScript ? 1 : 0)
+  ) {
+    fail(
+      page,
+      needsAccordionScript
+        ? "FAQ must load exactly one script"
+        : "pages without FAQ controls must not load JavaScript",
+    );
+  } else if (needsAccordionScript) {
     const scriptAttrs = attributes(scriptTags[0]);
     if (scriptAttrs.get("src") !== "site.js" || !scriptAttrs.has("defer")) {
-      fail(page, "must load only the local site.js with the defer attribute");
+      fail(page, "FAQ must load only the local site.js with the defer attribute");
     }
     if (scriptElements[0].body.trim()) fail(page, "must not contain inline script code");
   }
@@ -505,10 +514,13 @@ for (const [page, canonical] of expectedPages) {
     return hasClass(attrs, "skip-link") && attrs.get("href") === "#main-content";
   });
   if (skipLinks.length !== 1) fail(page, "must contain one skip link to #main-content");
-  const mains = tags(source, "main").filter(
-    (tag) => attributes(tag).get("id") === "main-content",
-  );
-  if (mains.length !== 1) fail(page, "must contain one main#main-content landmark");
+  const mains = tags(source, "main").filter((tag) => {
+    const attrs = attributes(tag);
+    return attrs.get("id") === "main-content" && attrs.get("tabindex") === "-1";
+  });
+  if (mains.length !== 1) {
+    fail(page, "must contain one focusable main#main-content landmark");
+  }
 
   const pageIds = new Set();
   for (const tag of allOpeningTags(source)) {
@@ -581,6 +593,15 @@ for (const [page, canonical] of expectedPages) {
     const signupImages = valuesFor(signup, "img", "src");
     if (!signupImages.includes("assets/guardian-star.avif")) {
       fail(page, "shared signup must use assets/guardian-star.avif");
+    }
+    const guardianStar = tags(signup, "img")
+      .map(attributes)
+      .find((attrs) => attrs.get("src") === "assets/guardian-star.avif");
+    if (
+      guardianStar?.get("loading") !== "lazy" ||
+      guardianStar?.get("decoding") !== "async"
+    ) {
+      fail(page, "shared guardian star must load lazily and decode asynchronously");
     }
   }
 
@@ -1065,6 +1086,23 @@ if (!/@media\s*\([^)]*(?:min-width|max-width)\s*:\s*750px[^)]*\)/iu.test(css)) {
 }
 if (!/@media\s*\([^)]*(?:min-width|max-width)\s*:\s*1000px[^)]*\)/iu.test(css)) {
   fail("styles.css", "must include the official 1000px tablet breakpoint");
+}
+for (const [pattern, requirement] of [
+  [/\.home-hero\s*\{[^}]*height\s*:\s*146\.735vw/isu, "scale the phone hero fluidly"],
+  [/\.feature-connect\s*\{[^}]*height\s*:\s*180\.1vw/isu, "scale phone feature sections fluidly"],
+  [/\.how-it-works\s*\{[^}]*height\s*:\s*max\(80\.273vw,\s*47\.77vh\)/isu, "preserve the official responsive How-it-works stage"],
+  [/\.social-giveaway\s*\{[^}]*height\s*:\s*40\.465vh/isu, "preserve the official responsive social stage"],
+  [/\.faq-list\s*\{[^}]*width\s*:\s*85\.277vw/isu, "keep the phone FAQ list fluid"],
+  [/\.guardian-signup\s*\{[^}]*height\s*:\s*81\.94vw/isu, "keep the shared phone signup fluid"],
+  [/\.site-footer\s*\{[^}]*justify-content\s*:\s*flex-end/isu, "bottom-anchor the phone footer stack"],
+  [/\.footer-column\s+a\s*\{[^}]*min-height\s*:\s*24px[^}]*\}\s*\.footer-column\s+a\s*\+\s*a\s*>\s*span/isu, "retain 24px mobile footer targets without shifting the official baselines"],
+  [/\.faq-question\[aria-expanded=["']true["']\]\s+\.faq-chevron::before/isu, "show the expanded FAQ chevron state"],
+  [/box-shadow\s*:\s*0\s+0\s+0\s+3px\s+#fff/iu, "use a two-tone keyboard focus indicator"],
+]) {
+  if (!pattern.test(css)) fail("styles.css", `must ${requirement}`);
+}
+if (/\.subscribe-pill:hover\s*\{[^}]*transform\s*:/isu.test(css)) {
+  fail("styles.css", "Subscribe hover must not resize the control");
 }
 if (!/grid-template-rows\s*:\s*0fr/iu.test(css) || !/(?:250ms|0\.25s)/iu.test(css)) {
   fail("styles.css", "FAQ panels must use the official 0fr animation over 250ms");
