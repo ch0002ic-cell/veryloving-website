@@ -1,4 +1,5 @@
 import { readdir, readFile, stat } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -43,6 +44,13 @@ const originalPages = new Set([
   "faq.html",
   "privacy.html",
   "accessibility-statement.html",
+]);
+
+const originalPageSha256 = new Map([
+  ["index.html", "8227afefa687246da0bfd176cb70b2366ba4767fba79a3b9ceb579eb48b5ceb1"],
+  ["faq.html", "ceacabb5db840f2ff836554af376f4411486faeb81a7f5508655be614774ba45"],
+  ["privacy.html", "0c8d6c6fe5363e88b732b7e7d3731d8d066d5597ffb44dea03c73a6c7d3dad32"],
+  ["accessibility-statement.html", "9a277ad5e29a74ca645b8c450c0ddadf9c1f07a5ac6c2ccde2b6f0b08ce4c197"],
 ]);
 
 const productPages = new Set([
@@ -208,6 +216,25 @@ const errors = [];
 
 function fail(file, message) {
   errors.push(`${file}: ${message}`);
+}
+
+function relativeLuminance(hexColor) {
+  const channels = hexColor
+    .replace(/^#/u, "")
+    .match(/.{2}/gu)
+    .map((channel) => Number.parseInt(channel, 16) / 255)
+    .map((channel) =>
+      channel <= 0.04045
+        ? channel / 12.92
+        : ((channel + 0.055) / 1.055) ** 2.4,
+    );
+  return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+}
+
+function contrastRatio(colorA, colorB) {
+  const lighter = Math.max(relativeLuminance(colorA), relativeLuminance(colorB));
+  const darker = Math.min(relativeLuminance(colorA), relativeLuminance(colorB));
+  return (lighter + 0.05) / (darker + 0.05);
 }
 
 function slash(file) {
@@ -462,6 +489,14 @@ for (const [page, canonical] of expectedPages) {
   const source = pages.get(page);
   if (!source) continue;
   shippedHtml.push(source);
+
+  if (originalPages.has(page)) {
+    const expectedHash = originalPageSha256.get(page);
+    const actualHash = createHash("sha256").update(source).digest("hex");
+    if (actualHash !== expectedHash) {
+      fail(page, "must remain byte-for-byte unchanged in the product-page draft");
+    }
+  }
 
   if (!/^\s*<!doctype html>/iu.test(source)) fail(page, "must begin with an HTML doctype");
   if (!/<html\b[^>]*\blang\s*=\s*(["'])en\1/iu.test(source)) {
@@ -987,32 +1022,70 @@ const productPageRequirements = new Map([
     "products.html",
     {
       title: "Product Family | VeryLoving",
-      h1: "Companionship that moves with you—and grows with home",
-      activeHref: "products.html",
+      h1: "Two directions for warmer companionship",
+      breadcrumbLinks: [],
+      breadcrumbCurrent: "Products",
       copy: [
-        "Under development",
+        "Guardian System vision",
+        "A Guardian System vision—not one operating system today",
         "NorthStar wearable",
-        "Research only",
         "Home Companion",
-        "No physical robot, sensor, or remote control system is connected today.",
+        "Company-reported milestones",
+        "not evidence of medical validation, product readiness, or a guaranteed safety result.",
         "Warmth, with clear boundaries",
       ],
+      minimumFeatures: 3,
+      needsRules: true,
+      needsBoundary: false,
+      needsCta: false,
+      images: [
+        "assets/veryloving-logo.avif",
+        "assets/phone-map-preview.avif",
+        "assets/charm-preview.avif",
+        "assets/wear-peace.avif",
+        "assets/guardian-star.avif",
+        "assets/ces-badge.avif",
+        "assets/guardian-star.avif",
+      ],
+      prohibitedCopy: [],
     },
   ],
   [
     "wearable.html",
     {
       title: "NorthStar Wearable | VeryLoving",
-      h1: "A wearable companion, led by your choices",
-      activeHref: "wearable.html",
+      h1: "More than an accessory",
+      breadcrumbLinks: ["products.html"],
+      breadcrumbCurrent: "Personal wearable",
       copy: [
         "Under development",
-        "NorthStar does not provide emergency help. Gestures only open phone screens; they do not automatically start audio, share location, or contact anyone.",
         "A development path, not a safety promise",
-        "A single tap can open the AI companion screen. You still choose when to press Start and begin a conversation.",
-        "Opening the phone’s share sheet does not prove that another person received the location.",
+        "NorthStar does not provide emergency help.",
+        "Meet Capybear",
+        "Designed to feel personal, not clinical",
+        "Share only when you choose",
+        "A gesture opens. You decide what happens next.",
         "What NorthStar does not claim",
-        "No automatic SOS, emergency calling, contact notification, or delivery receipt.",
+        "No verified public battery, radio-range, water-resistance, or material specification.",
+      ],
+      minimumFeatures: 3,
+      needsRules: true,
+      needsBoundary: true,
+      needsCta: true,
+      images: [
+        "assets/veryloving-logo.avif",
+        "assets/phone-map-preview.avif",
+        "assets/charm-preview.avif",
+        "assets/ces-badge.avif",
+        "assets/wear-peace.avif",
+        "assets/phone-map-preview.avif",
+        "assets/guardian-star.avif",
+      ],
+      prohibitedCopy: [
+        "global communication integration",
+        "keeps you safe",
+        "automatic protection",
+        "recognizes your emotions",
       ],
     },
   ],
@@ -1021,16 +1094,40 @@ const productPageRequirements = new Map([
     {
       title: "Home Companion Research | VeryLoving",
       h1: "A future companion for the home",
-      activeHref: "home-companion.html",
+      breadcrumbLinks: ["products.html"],
+      breadcrumbCurrent: "Home companion research",
       copy: [
         "Research only",
-        "Static research concept",
+        "The current experience is a static research surface",
         "No physical Home Companion is connected.",
-        "Warm presence",
-        "Supportive routines",
-        "Human connection",
+        "Friendly, not industrial",
+        "Choice before automation",
+        "Personalization needs consent",
+        "The concept does not recognize emotions",
+        "Trust must be designed before a device",
         "No physical integration",
-        "No physical-device availability claim",
+        "no robot transport",
+      ],
+      minimumFeatures: 4,
+      needsRules: false,
+      needsBoundary: true,
+      needsCta: true,
+      images: [
+        "assets/veryloving-logo.avif",
+        "assets/guardian-star.avif",
+        "assets/guardian-star.avif",
+        "assets/guardian-star.avif",
+        "assets/guardian-star.avif",
+        "assets/guardian-star.avif",
+        "assets/guardian-star.avif",
+      ],
+      prohibitedCopy: [
+        "lifelong companion",
+        "unconditional companionship",
+        "recognizes human emotions",
+        "resemble loved ones",
+        "controls your home",
+        "monitors your home",
       ],
     },
   ],
@@ -1047,29 +1144,112 @@ for (const [page, requirements] of productPageRequirements) {
     fail(page, `h1 must be exactly ${JSON.stringify(requirements.h1)}`);
   }
   checkOrderedCopy(page, pageText, requirements.copy);
-
-  const productNavElement = elementsWithClass(source, "nav", "product-nav")[0];
-  const productNav = productNavElement?.markup ?? "";
-  if (!productNavElement) {
-    fail(page, "must contain the shared product-family navigation");
-  } else {
-    const productLinks = valuesFor(productNav, "a", "href");
-    const expectedProductLinks = [
-      "products.html",
-      "wearable.html",
-      "home-companion.html",
-    ];
-    if (JSON.stringify(productLinks) !== JSON.stringify(expectedProductLinks)) {
-      fail(page, "product-family navigation must link to all three product pages in order");
+  for (const prohibited of requirements.prohibitedCopy) {
+    if (pageText.toLowerCase().includes(prohibited.toLowerCase())) {
+      fail(page, `must not present unsupported capability copy ${JSON.stringify(prohibited)}`);
     }
-    const activeLinks = tags(productNav, "a")
-      .map(attributes)
-      .filter((attrs) => attrs.get("aria-current") === "page");
-    if (
-      activeLinks.length !== 1 ||
-      activeLinks[0].get("href") !== requirements.activeHref
-    ) {
-      fail(page, `product-family navigation must mark ${requirements.activeHref} current`);
+  }
+
+  const breadcrumbs = elementsWithClass(source, "nav", "product-breadcrumb");
+  if (breadcrumbs.length !== 1) {
+    fail(page, "must contain exactly one in-hero product breadcrumb");
+  } else {
+    const breadcrumb = breadcrumbs[0].markup;
+    const breadcrumbLinks = valuesFor(breadcrumb, "a", "href");
+    if (JSON.stringify(breadcrumbLinks) !== JSON.stringify(requirements.breadcrumbLinks)) {
+      fail(page, "product breadcrumb must keep the reviewed parent trail");
+    }
+    const currentElements = allOpeningTags(breadcrumb)
+      .map((tag) => ({ tag, attrs: attributes(tag) }))
+      .filter(({ attrs }) => attrs.get("aria-current") === "page");
+    if (currentElements.length !== 1) {
+      fail(page, "product breadcrumb must mark exactly one current page");
+    } else {
+      const currentTagName = currentElements[0].tag.match(/^<([a-z\d-]+)/iu)?.[1];
+      const currentElement = currentTagName
+        ? pairedElements(breadcrumb, currentTagName).find(
+            (element) => element.attrs.get("aria-current") === "page",
+          )
+        : null;
+      if (!currentElement || normalizedText(currentElement.body) !== requirements.breadcrumbCurrent) {
+        fail(page, `product breadcrumb must identify ${JSON.stringify(requirements.breadcrumbCurrent)}`);
+      }
+    }
+  }
+
+  const productHeroMedia = elementsWithClass(source, "figure", "product-hero-media");
+  if (productHeroMedia.length !== 1) {
+    fail(page, "must contain one official-style product hero visual");
+  }
+  const productFeatures = elementsWithClass(source, "section", "product-feature");
+  if (productFeatures.length < requirements.minimumFeatures) {
+    fail(page, `must contain at least ${requirements.minimumFeatures} full-bleed split feature sections`);
+  }
+  for (const feature of productFeatures) {
+    if (!/\bfeature\b/u.test(feature.attrs.get("class") ?? "")) {
+      fail(page, "each product feature must reuse the official Home feature primitive");
+    }
+    if (!/\bfeature-media\b/u.test(feature.markup) || !/\bfeature-copy\b/u.test(feature.markup)) {
+      fail(page, "each product feature must include media and copy panels");
+    }
+  }
+  if (elementsWithClass(source, "section", "product-rules").length !== Number(requirements.needsRules)) {
+    fail(page, requirements.needsRules ? "must include one FAQ-style ruled information section" : "must not add an unreviewed ruled section");
+  }
+  if (elementsWithClass(source, "section", "product-boundary-band").length !== Number(requirements.needsBoundary)) {
+    fail(page, requirements.needsBoundary ? "must include one official dark editorial boundary band" : "must not add an unreviewed boundary band");
+  }
+  if (elementsWithClass(source, "section", "product-cta").length !== Number(requirements.needsCta)) {
+    fail(page, requirements.needsCta ? "must include one in-flow official-style CTA section" : "must not add an unreviewed CTA section");
+  }
+
+  for (const legacyClass of [
+    "product-nav",
+    "status-chip",
+    "product-button",
+    "line-card",
+    "family-orbit",
+    "concept-companion",
+    "research-card-grid",
+    "wearable-glow",
+    "visual-note",
+    "research-window",
+    "home-halo",
+    "boundary-mark",
+    "product-research-mark",
+    "concept-caption",
+    "concept-hero-words",
+  ]) {
+    if (new RegExp(`\\b${legacyClass}\\b`, "u").test(source)) {
+      fail(page, `must not retain the superseded ${legacyClass} framework`);
+    }
+  }
+
+  const actualImages = valuesFor(source, "img", "src");
+  if (JSON.stringify(actualImages) !== JSON.stringify(requirements.images)) {
+    fail(page, "must keep the reviewed product imagery and order");
+  }
+  const aboveFoldImageTags = new Set([
+    ...tags(elementsWithClass(source, "header", "site-header")[0]?.markup ?? "", "img"),
+    ...tags(productHeroMedia[0]?.markup ?? "", "img"),
+  ]);
+  for (const imageTag of tags(source, "img")) {
+    if (aboveFoldImageTags.has(imageTag)) continue;
+    const imageAttrs = attributes(imageTag);
+    if (imageAttrs.get("loading") !== "lazy" || imageAttrs.get("decoding") !== "async") {
+      fail(page, `below-fold image ${imageAttrs.get("src") ?? ""} must load lazily and decode asynchronously`);
+    }
+  }
+
+  for (const anchorTag of tags(source, "a")) {
+    const anchorAttrs = attributes(anchorTag);
+    if (hasClass(anchorAttrs, "product-pill")) {
+      if (!hasClass(anchorAttrs, "pill") || !hasClass(anchorAttrs, "pill-coral")) {
+        fail(page, "primary product CTAs must retain the reviewed official pill classes");
+      }
+    }
+    if (hasClass(anchorAttrs, "product-feature-pill") && !hasClass(anchorAttrs, "pill")) {
+      fail(page, "split-feature CTAs must retain the official pill primitive");
     }
   }
 }
@@ -1077,7 +1257,7 @@ for (const [page, requirements] of productPageRequirements) {
 const productOverview = pages.get("products.html") ?? "";
 for (const requiredCopy of [
   "Mobile AI + foreground map",
-  "It is not a monitoring or emergency service.",
+  "It is not a monitoring or emergency service",
 ]) {
   if (!normalizedText(productOverview).includes(requiredCopy)) {
     fail("products.html", `must retain the product-status boundary ${JSON.stringify(requiredCopy)}`);
@@ -1336,13 +1516,17 @@ if (/@import\b/iu.test(productCss) || /url\(\s*(["']?)https?:/iu.test(productCss
   fail("product-pages.css", "must not load external styles, fonts, or images");
 }
 for (const selector of [
-  ".product-nav",
+  ".product-breadcrumb",
   ".product-hero",
-  ".status-chip",
-  ".concept-companion",
-  ".interaction-steps",
-  ".research-boundary",
-  ".research-card-grid",
+  ".product-hero-media",
+  ".product-status-line",
+  ".product-feature",
+  ".product-feature-media",
+  ".product-rule-list",
+  ".product-rule-row",
+  ".product-boundary-band",
+  ".product-cta",
+  ".concept-home-graphic",
 ]) {
   if (!productCss.includes(selector)) {
     fail("product-pages.css", `must define ${selector}`);
@@ -1353,13 +1537,79 @@ for (const [pattern, requirement] of [
   [/@media\s*\(max-width:\s*750px\)/iu, "include the shared phone breakpoint"],
   [/@media\s*\(prefers-reduced-motion:\s*reduce\)/iu, "respect reduced motion"],
   [/@media\s*\(forced-colors:\s*active\)/iu, "support forced colors"],
-  [/\.product-button\s*\{[^}]*min-height\s*:\s*52px/isu, "keep primary product controls at least 52px tall"],
-  [/\.product-nav\s+a\s*\{[^}]*min-height\s*:\s*44px/isu, "keep desktop product navigation targets at least 44px tall"],
-  [/\.step-number\s*\{[^}]*color\s*:\s*#9f442c/isu, "keep interaction-step numbers legible"],
-  [/\.research-boundary\s+p\s*\{[^}]*color\s*:\s*#6b5c4d/isu, "keep research-boundary copy legible"],
-  [/\.product-page\s+\.guardian-signup\s*\{[^}]*background\s*:\s*#8b614f/isu, "keep the new-page signup band legible"],
+  [/\.product-hero\s*\{[^}]*min-height\s*:\s*541\.125px/isu, "reuse the official desktop hero proportion"],
+  [/\.product-hero\s+h1\s*\{[^}]*font-size\s*:\s*46px/isu, "reuse the official desktop hero type scale"],
+  [/\.product-pill\s*\{[^}]*position\s*:\s*static[^}]*min-height\s*:\s*55px/isu, "keep product controls in flow and at least 55px tall on desktop"],
+  [/\.product-feature-pill\s*\{[^}]*position\s*:\s*static/isu, "keep split-feature controls in flow at phone widths"],
+  [/\.product-text-link\s*\{[^}]*min-height\s*:\s*48px/isu, "keep desktop secondary product controls at least 48px tall"],
+  [/\.product-page\s+main\s*\{[^}]*--product-button-ink\s*:\s*#4d2f1d/isu, "define a readable product CTA ink"],
+  [/\.product-page\s+main\s+\.pill-coral\s*\{[^}]*color\s*:\s*var\(--product-button-ink\)/isu, "keep coral product CTA text at accessible contrast"],
+  [/\.feature-copy:not\(\.feature-copy-dark\)\s+\.product-feature-pill\s*\{[^}]*color\s*:\s*var\(--product-button-ink\)/isu, "keep coral split-feature CTA text at accessible contrast"],
+  [/\.product-rule-list\s*\{[^}]*width\s*:\s*756\.66px/isu, "reuse the official desktop FAQ measure for ruled information"],
+  [/\.product-rule-row\s*\{[^}]*padding\s*:\s*16px\s+0/isu, "reuse the official FAQ row rhythm"],
+  [/\.product-feature\s*\{[^}]*min-height\s*:\s*599px/isu, "reuse the official full-bleed feature proportion"],
 ]) {
   if (!pattern.test(productCss)) fail("product-pages.css", `must ${requirement}`);
+}
+
+for (const background of ["#f58556", "#ff9b70"]) {
+  const ratio = contrastRatio("#4d2f1d", background);
+  if (ratio < 4.5) {
+    fail(
+      "product-pages.css",
+      `product CTA ink contrast against ${background} must be at least 4.5:1 (found ${ratio.toFixed(2)}:1)`,
+    );
+  }
+}
+
+for (const legacySelector of [
+  ".product-nav",
+  ".status-chip",
+  ".product-button",
+  ".line-card",
+  ".family-orbit",
+  ".concept-companion",
+  ".research-card-grid",
+  ".wearable-glow",
+  ".visual-note",
+  ".research-window",
+  ".home-halo",
+  ".boundary-mark",
+  ".product-research-mark",
+  ".concept-caption",
+  ".concept-hero-words",
+]) {
+  if (productCss.includes(legacySelector)) {
+    fail("product-pages.css", `must not retain the superseded ${legacySelector} framework`);
+  }
+}
+
+for (const sharedShellSelector of [
+  ".site-header",
+  ".header-inner",
+  ".primary-nav",
+  ".guardian-signup",
+  ".guardian-inner",
+  ".subscribe-pill",
+  ".site-footer",
+  ".footer-column",
+  ".brand",
+]) {
+  if (productCss.includes(sharedShellSelector)) {
+    fail("product-pages.css", `must not override the exact shared shell selector ${sharedShellSelector}`);
+  }
+}
+if (/\bbox-shadow\s*:/iu.test(productCss) || /(?:linear|radial)-gradient\s*\(/iu.test(productCss)) {
+  fail("product-pages.css", "must keep the official flat, shadow-free editorial framework");
+}
+if (/\.product-page\s+main\s*\{[^}]*overflow\s*:\s*hidden/isu.test(productCss)) {
+  fail("product-pages.css", "must not conceal product-page layout overflow at the main landmark");
+}
+if (/\.product-page\s+(?!main\b)(?:h[1-6]|p|figure|\*)/iu.test(productCss)) {
+  fail("product-pages.css", "must scope product typography and motion rules to main, outside the exact shared shell");
+}
+if (/\.product-word-stage\s*>\s*span/iu.test(productCss) || /color\s*:\s*#fff\b/iu.test(productCss)) {
+  fail("product-pages.css", "must not reintroduce low-contrast small rose copy or white product CTA text");
 }
 for (const match of productCss.matchAll(/url\(\s*(["']?)([^"')]+)\1\s*\)/giu)) {
   const reference = match[2].trim();
