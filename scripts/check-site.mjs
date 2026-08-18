@@ -1163,6 +1163,24 @@ for (const [pattern, label] of unsafePrivacyClaims) {
 }
 
 const accessibility = pages.get("accessibility-statement.html") ?? "";
+const accessibilityText = normalizedText(accessibility);
+for (const requiredScopeCopy of [
+  "these seven static webpages",
+  "Product Family",
+  "NorthStar Wearable",
+  "Home Companion Research",
+  "Last updated: 18 August 2026",
+]) {
+  if (!accessibilityText.includes(requiredScopeCopy)) {
+    fail(
+      "accessibility-statement.html",
+      `must keep the seven-page scope current with ${JSON.stringify(requiredScopeCopy)}`,
+    );
+  }
+}
+if (/these four static webpages/iu.test(accessibilityText)) {
+  fail("accessibility-statement.html", "must not retain the superseded four-page scope");
+}
 if (/\{\{|\}\}|\[(?:insert|company|organization|date|email|phone|address|name|url)[^\]]*\]|lorem ipsum/iu.test(accessibility)) {
   fail("accessibility-statement.html", "template placeholders must be replaced");
 }
