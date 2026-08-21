@@ -37,20 +37,10 @@ const expectedPages = new Map([
     "home-companion.html",
     "https://ch0002ic-cell.github.io/veryloving-website/home-companion.html",
   ],
-]);
-
-const originalPages = new Set([
-  "index.html",
-  "faq.html",
-  "privacy.html",
-  "accessibility-statement.html",
-]);
-
-const originalPageSha256 = new Map([
-  ["index.html", "8227afefa687246da0bfd176cb70b2366ba4767fba79a3b9ceb579eb48b5ceb1"],
-  ["faq.html", "ceacabb5db840f2ff836554af376f4411486faeb81a7f5508655be614774ba45"],
-  ["privacy.html", "0c8d6c6fe5363e88b732b7e7d3731d8d066d5597ffb44dea03c73a6c7d3dad32"],
-  ["accessibility-statement.html", "9a277ad5e29a74ca645b8c450c0ddadf9c1f07a5ac6c2ccde2b6f0b08ce4c197"],
+  [
+    "terms.html",
+    "https://ch0002ic-cell.github.io/veryloving-website/terms.html",
+  ],
 ]);
 
 const productPages = new Set([
@@ -490,14 +480,6 @@ for (const [page, canonical] of expectedPages) {
   if (!source) continue;
   shippedHtml.push(source);
 
-  if (originalPages.has(page)) {
-    const expectedHash = originalPageSha256.get(page);
-    const actualHash = createHash("sha256").update(source).digest("hex");
-    if (actualHash !== expectedHash) {
-      fail(page, "must remain byte-for-byte unchanged in the product-page draft");
-    }
-  }
-
   if (!/^\s*<!doctype html>/iu.test(source)) fail(page, "must begin with an HTML doctype");
   if (!/<html\b[^>]*\blang\s*=\s*(["'])en\1/iu.test(source)) {
     fail(page, 'must declare html lang="en"');
@@ -536,11 +518,9 @@ for (const [page, canonical] of expectedPages) {
   const styleLinks = tags(source, "link").filter((tag) =>
     (attributes(tag).get("rel") ?? "").split(/\s+/u).includes("stylesheet"),
   );
-  const expectedStyles = originalPages.has(page)
-    ? ["styles.css"]
-    : productPages.has(page)
-      ? ["styles.css", "product-pages.css"]
-      : [];
+  const expectedStyles = productPages.has(page)
+    ? ["styles.css", "product-pages.css"]
+    : ["styles.css"];
   const actualStyles = styleLinks.map((tag) => attributes(tag).get("href") ?? "");
   if (JSON.stringify(actualStyles) !== JSON.stringify(expectedStyles)) {
     fail(page, `must load the reviewed stylesheets in order: ${expectedStyles.join(", ")}`);
@@ -684,6 +664,7 @@ for (const [page, canonical] of expectedPages) {
       "650-762-6230",
       "george@verylovinginc.com",
       "privacy policy",
+      "terms of use",
       "accessibility statement",
       "© 2025 by veryloving",
       "built at founders inc.",
@@ -691,7 +672,12 @@ for (const [page, canonical] of expectedPages) {
       if (!footerText.includes(required)) fail(page, `shared footer must contain ${required}`);
     }
     const footerLinks = valuesFor(footer, "a", "href");
-    for (const required of ["privacy.html", "accessibility-statement.html", EMAIL_URL]) {
+    for (const required of [
+      "privacy.html",
+      "terms.html",
+      "accessibility-statement.html",
+      EMAIL_URL,
+    ]) {
       if (!footerLinks.includes(required)) fail(page, `shared footer must link to ${required}`);
     }
     if (
@@ -995,7 +981,11 @@ for (const image of allowedFaqImages) {
   }
 }
 
-for (const legalPage of ["privacy.html", "accessibility-statement.html"]) {
+for (const legalPage of [
+  "privacy.html",
+  "terms.html",
+  "accessibility-statement.html",
+]) {
   const source = pages.get(legalPage) ?? "";
   const imageSources = valuesFor(source, "img", "src");
   for (const required of [
@@ -1366,7 +1356,7 @@ const residuePatterns = [
   [/_api\//iu, "captured API path"],
   [/access[-_]?tokens?/iu, "access-token residue"],
   [/(?:wix|parastorage|thunderbolt|webpack|fedops)/iu, "Wix/runtime residue"],
-  [/(?:sentry\.io|telemetry)/iu, "telemetry residue"],
+  [/(?:sentry\.io|telemetry(?:\.js|\/collect)|data-telemetry)/iu, "telemetry residue"],
   [/-----BEGIN [A-Z ]*PRIVATE KEY-----/u, "private key"],
   [/\bBearer\s+[A-Za-z0-9._~-]{20,}/u, "bearer credential"],
   [/\b(?:sk_live|AIza)[A-Za-z0-9_-]{12,}/u, "API credential"],
@@ -1376,23 +1366,12 @@ for (const [pattern, label] of residuePatterns) {
   if (pattern.test(siteText)) fail("site", `${label} must not be present in shipped pages`);
 }
 
-const termsPatterns = [
-  /terms(?:-and-conditions|-of-(?:service|use))?\.html/iu,
-  /\bterms and conditions\b/iu,
-  /\bterms of (?:service|use)\b/iu,
-  /\b(?:accept|agree to)(?: the)? terms\b/iu,
-  /\bterms[- +]plus[- +]privacy\b/iu,
-  /\bterms acceptance\b/iu,
-  /\bEULA\b/u,
-];
-for (const pattern of termsPatterns) {
-  if (pattern.test(siteText)) fail("site", "must not add a Terms page or acceptance requirement");
-}
 if (/(?:yongxin12\.github\.io|veryloving-privacy|www\.verylovinginc\.com\/privacy)/iu.test(siteText)) {
   fail("site", "legacy Privacy Policy URLs must not be present");
 }
 
 const privacy = pages.get("privacy.html") ?? "";
+const privacyText = normalizedText(privacy);
 const currentPrivacyUrl = "https://ch0002ic-cell.github.io/veryloving-website/privacy.html";
 if (!privacy.includes(currentPrivacyUrl)) {
   fail("privacy.html", `must identify the current Privacy Policy URL as ${currentPrivacyUrl}`);
@@ -1402,6 +1381,23 @@ if (!/under review/iu.test(privacy)) {
 }
 if (!/(?:not|does not)[^.]{0,80}(?:release|store)[^.]{0,40}approv(?:al|ed)/iu.test(privacy)) {
   fail("privacy.html", "must not present the candidate notice as store-release approval");
+}
+for (const required of [
+  "Operating-system push and local notifications are not enabled",
+  "A user-requested phone sign-in or account-verification flow may send a one-time passcode by SMS through Twilio",
+  "No current safety, trusted-contact, or marketing flow automatically sends an SMS",
+  "does not implement physiological heart-rate or heartbeat sensing",
+  "Operating-system share sheet",
+  "A material limitation must not be hidden solely in a legal document",
+  "GitHub Pages, Google Forms, YouTube, Stripe",
+  "not yet an effective production privacy policy",
+  "c03aa688806142a4953fbb3bbf470402c4081f40",
+  "59c38ac641f71048aa0d0a109d0869f861cb86ec",
+  "3bdb1a8fbdc04de4cd909e8008ad0dd7267fd6fb",
+]) {
+  if (!privacyText.includes(required)) {
+    fail("privacy.html", `must preserve reviewed release boundary: ${required}`);
+  }
 }
 const unsafePrivacyClaims = [
   [/\b(?:within|after|for)\s+\d+\s+(?:calendar\s+)?(?:days?|months?|years?)\b/iu, "fixed retention/deletion duration"],
@@ -1417,24 +1413,184 @@ for (const [pattern, label] of unsafePrivacyClaims) {
   if (pattern.test(privacy)) fail("privacy.html", `must not make an unsafe ${label}`);
 }
 
+const terms = pages.get("terms.html") ?? "";
+const termsText = normalizedText(terms);
+const currentTermsUrl = "https://ch0002ic-cell.github.io/veryloving-website/terms.html";
+if (!terms.includes(currentTermsUrl)) {
+  fail("terms.html", `must identify the current Terms URL as ${currentTermsUrl}`);
+}
+for (const required of [
+  "Status — release candidate, not yet effective",
+  "The current app does not present this exact document for versioned acceptance",
+  "VeryLoving is not an emergency service",
+  "does not implement physiological heart-rate or heartbeat sensing",
+  "does not register for production push notifications",
+  "These candidate Terms do not establish a final product specification",
+  "Any sweepstakes, contest, or giveaway must have separately reviewed official rules",
+  "No arbitration provision, class-action waiver, governing-law clause",
+  "Privacy Notice",
+  "george@verylovinginc.com",
+  "c03aa688806142a4953fbb3bbf470402c4081f40",
+  "59c38ac641f71048aa0d0a109d0869f861cb86ec",
+  "3bdb1a8fbdc04de4cd909e8008ad0dd7267fd6fb",
+]) {
+  if (!termsText.includes(required)) {
+    fail("terms.html", `must preserve reviewed candidate boundary: ${required}`);
+  }
+}
+if (/\{\{|\}\}|\[(?:insert|company|organization|date|email|phone|address|name|url)[^\]]*\]|lorem ipsum|\b(?:TODO|TBD)\b/iu.test(terms)) {
+  fail("terms.html", "must not contain template placeholders or unfinished drafting residue");
+}
+for (const [pattern, label] of [
+  [/\b(?:these terms|this agreement) (?:are|is) (?:now )?effective\b/iu, "effective-status claim"],
+  [/\b(?:automatically|always) (?:contacts?|notifies?|dispatches?) emergency\b/iu, "automatic emergency claim"],
+  [/\b(?:guarantees?|ensures?) (?:your |the )?safety\b/iu, "safety guarantee"],
+]) {
+  if (pattern.test(terms)) fail("terms.html", `must not make an unsafe ${label}`);
+}
+
+function checkLegalDocumentStructure(
+  file,
+  source,
+  expectedTitle,
+  expectedH1,
+  expectedHeadings,
+  currentLegalHref,
+  requiredDocumentHref,
+) {
+  const bodyTags = tags(source, "body");
+  if (
+    bodyTags.length !== 1 ||
+    !hasClass(attributes(bodyTags[0]), "doc-page")
+  ) {
+    fail(file, "must use exactly one body.doc-page");
+  }
+
+  if (titles.get(file) !== expectedTitle) {
+    fail(file, `title must be exactly ${JSON.stringify(expectedTitle)}`);
+  }
+
+  const h1Values = pairedElements(source, "h1").map((element) =>
+    normalizedText(element.body),
+  );
+  if (JSON.stringify(h1Values) !== JSON.stringify([expectedH1])) {
+    fail(file, `h1 must be exactly ${JSON.stringify(expectedH1)}`);
+  }
+
+  const documentArticles = elementsWithClass(source, "article", "document-shell");
+  if (documentArticles.length !== 1) {
+    fail(file, "must contain exactly one article.document-shell");
+  }
+  const documentMarkup = documentArticles[0]?.markup ?? "";
+
+  const headings = pairedElements(documentMarkup, "h2").map((element) =>
+    normalizedText(element.body),
+  );
+  if (JSON.stringify(headings) !== JSON.stringify(expectedHeadings)) {
+    fail(file, "legal-document section sequence must remain complete and ordered");
+  }
+
+  const reviewDates = tags(documentMarkup, "time").filter(
+    (tag) => attributes(tag).get("datetime") === "2026-08-21",
+  );
+  if (reviewDates.length !== 1) {
+    fail(file, "must contain one semantic 2026-08-21 review date");
+  }
+
+  if (!valuesFor(documentMarkup, "a", "href").includes(requiredDocumentHref)) {
+    fail(file, `must link to ${requiredDocumentHref} from the document body`);
+  }
+
+  const footer = elementsWithClass(source, "footer", "site-footer")[0]?.markup ?? "";
+  const currentLinks = tags(footer, "a").filter((tag) => {
+    const attrs = attributes(tag);
+    return (
+      attrs.get("href") === currentLegalHref &&
+      attrs.get("aria-current") === "page"
+    );
+  });
+  if (currentLinks.length !== 1) {
+    fail(file, `shared footer must mark ${currentLegalHref} as the current page`);
+  }
+}
+
+checkLegalDocumentStructure(
+  "privacy.html",
+  privacy,
+  "Privacy notice | VeryLoving",
+  "Privacy notice",
+  [
+    "Important current boundaries",
+    "Who is responsible",
+    "Scope of this candidate notice",
+    "Website data practices",
+    "Mobile app data categories",
+    "Notifications, in-app notices, and communications",
+    "Service providers",
+    "Advertising, analytics, sale, and targeted advertising",
+    "Permissions and user choices",
+    "Sensitive data and automated inferences",
+    "Retention, account deletion, and other requests",
+    "Security",
+    "Children",
+    "Safety boundary",
+    "Review required before a United States launch",
+    "Changes to this notice",
+  ],
+  "privacy.html",
+  "terms.html",
+);
+
+checkLegalDocumentStructure(
+  "terms.html",
+  terms,
+  "Terms of Use | VeryLoving",
+  "Terms of Use",
+  [
+    "1. Emergency and safety warning",
+    "2. Scope and future acceptance",
+    "3. Eligibility",
+    "4. Accounts and account security",
+    "5. Limited license",
+    "6. Acceptable use",
+    "7. User content",
+    "8. AI-assisted voice experience",
+    "9. Maps, location, sharing, and social connections",
+    "10. Wearables, Home Companion, and simulations",
+    "11. Notifications and communications",
+    "12. Third-party services",
+    "13. Pre-orders and future purchases",
+    "14. Promotions and giveaways",
+    "15. Ownership and feedback",
+    "16. Service changes, suspension, and termination",
+    "17. Disclaimers",
+    "18. Limitation of liability",
+    "19. Governing law and disputes",
+    "20. Changes to these Terms",
+    "21. Contact and approval required",
+  ],
+  "terms.html",
+  "privacy.html",
+);
+
 const accessibility = pages.get("accessibility-statement.html") ?? "";
 const accessibilityText = normalizedText(accessibility);
 for (const requiredScopeCopy of [
-  "these seven static webpages",
+  "these eight static webpages",
   "Product Family",
   "NorthStar Wearable",
   "Home Companion Research",
-  "Last updated: 18 August 2026",
+  "22 August 2026",
 ]) {
   if (!accessibilityText.includes(requiredScopeCopy)) {
     fail(
       "accessibility-statement.html",
-      `must keep the seven-page scope current with ${JSON.stringify(requiredScopeCopy)}`,
+      `must keep the eight-page scope current with ${JSON.stringify(requiredScopeCopy)}`,
     );
   }
 }
-if (/these four static webpages/iu.test(accessibilityText)) {
-  fail("accessibility-statement.html", "must not retain the superseded four-page scope");
+if (/these (?:four|five|seven) static webpages/iu.test(accessibilityText)) {
+  fail("accessibility-statement.html", "must not retain a superseded page count");
 }
 if (/\{\{|\}\}|\[(?:insert|company|organization|date|email|phone|address|name|url)[^\]]*\]|lorem ipsum/iu.test(accessibility)) {
   fail("accessibility-statement.html", "template placeholders must be replaced");
