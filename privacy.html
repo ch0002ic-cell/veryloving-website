@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Read the candidate privacy notice for the VeryLoving mobile and wearable companion concept."
+      content="Read the release-candidate privacy notice for the VeryLoving website and reviewed mobile app experience."
     />
     <meta name="theme-color" content="#fbf8f0" />
     <link rel="icon" href="assets/favicon.png" type="image/png" />
@@ -17,7 +17,7 @@
     <meta property="og:title" content="Privacy notice | VeryLoving" />
     <meta
       property="og:description"
-      content="Candidate privacy notice for the VeryLoving mobile and wearable companion concept."
+      content="Release-candidate privacy notice for the VeryLoving website and reviewed mobile app experience."
     />
     <meta
       property="og:url"
@@ -42,8 +42,9 @@
         <p class="eyebrow">Privacy</p>
         <h1 id="privacy-title">Privacy notice</h1>
         <p>
-          This candidate notice describes the data practices being evaluated for
-          the VeryLoving mobile and wearable companion concept.
+          This release-candidate notice describes the current website and the
+          data practices observed in the reviewed VeryLoving mobile app source.
+          It is not yet an effective production privacy policy.
         </p>
       </section>
 
@@ -51,50 +52,115 @@
         <article class="document-shell">
           <p>
             <strong>Last updated:</strong>
-            <time datetime="2026-08-17">17 Aug 2026</time>
+            <time datetime="2026-08-21">21 August 2026</time>
           </p>
 
           <p class="status-note">
-            <strong>Status:</strong> This notice is a candidate under product,
-            privacy, security, and legal review. Publishing it does not mean that
-            an app build, capability, or store submission has been approved. It
-            must be updated to match the exact data practices of any reviewed
-            release before distribution.
+            <strong>Status — release candidate, not yet effective:</strong> This
+            notice remains under Product, Backend, Privacy, Security, and Legal
+            review. It is not bound to an approved production app version or
+            build. Publishing this candidate does not approve an app capability,
+            hardware product, store submission, or United States launch. The
+            exact release, providers, retention rules, request procedures, and
+            security evidence must be verified before distribution.
+            This candidate is not an approved Privacy Policy or store-release
+            approval.
           </p>
+
+          <p>
+            <strong>Reviewed source baselines:</strong>
+            mobile <code>c03aa688806142a4953fbb3bbf470402c4081f40</code>,
+            wearable <code>59c38ac641f71048aa0d0a109d0869f861cb86ec</code>,
+            and Home Companion
+            <code>3bdb1a8fbdc04de4cd909e8008ad0dd7267fd6fb</code>.
+            These engineering identifiers are not app versions or release
+            approvals; any source or deployment change requires a new review.
+          </p>
+
+          <h2>Important current boundaries</h2>
+          <ul>
+            <li>
+              Operating-system push and local notifications are not enabled in
+              the reviewed current app source. The shipping client does not
+              acquire a push token or schedule local notifications.
+            </li>
+            <li>
+              A user-requested phone sign-in or account-verification flow may
+              send a one-time passcode by SMS through Twilio. No current safety,
+              trusted-contact, or marketing flow automatically sends an SMS,
+              places a phone call, contacts emergency services, notifies a friend
+              or trusted contact, or shares a user's location.
+            </li>
+            <li>
+              The reviewed wearable integration does not implement physiological
+              heart-rate or heartbeat sensing. Wearable and Home Companion
+              localhost simulators use synthetic, process-memory data and do not
+              establish a physical device, monitoring, or external effect.
+            </li>
+            <li>
+              The current client does not provide automatic danger, distress, or
+              emotion-based safety classification, continuous background danger
+              or safety monitoring, emergency dispatch, or a guaranteed safety
+              outcome.
+            </li>
+          </ul>
 
           <h2>Who is responsible</h2>
           <p>
             veryloving Inc. is responsible for the VeryLoving experience described
-            on this page. Questions or privacy requests may be sent to
+            on this candidate page. Questions or privacy requests may be sent to
             <a href="mailto:george@verylovinginc.com"
               >george@verylovinginc.com</a
-            >.
+            >. The company identity, mailing address, and privacy-request process
+            must be confirmed in the final approved notice.
           </p>
 
           <h2>Scope of this candidate notice</h2>
           <p>
-            VeryLoving is still under development. The categories below reflect
-            the current candidate app design. A category is relevant only when its
-            corresponding feature is enabled in the reviewed build and the user
-            chooses to use it. Prototype, development, and production builds may
-            not expose the same features.
-          </p>
-          <p>
-            The website files published by veryloving Inc. do not include a
-            hosted form, advertising trackers, or analytics scripts. Selecting
-            Subscribe opens an external Google Form. An embedded YouTube video
-            may process routine request and device information under YouTube's
-            privacy practices, and the website host may process routine request
-            information, such as an IP address and browser details, under its own
-            practices. The local site script only controls the FAQ accordion and
-            does not collect or transmit visitor data.
+            This candidate covers the static VeryLoving website and data flows
+            observed in the reviewed mobile client source as of the date above.
+            It does not prove how an unreviewed backend, provider account,
+            firmware image, physical product, support system, or future release
+            handles data. A category applies only when the corresponding feature
+            is enabled in the exact build and the user chooses to use it.
+            Offline-demo, internal-prototype, development, and production-channel
+            configurations expose different capabilities.
           </p>
 
-          <h2>Data the candidate app may process</h2>
+          <h2>Website data practices</h2>
+          <p>
+            The website files published by veryloving Inc. do not include a
+            hosted form, advertising pixel, or analytics script. The local site
+            script controls the FAQ accordion and does not submit visitor data.
+            GitHub Pages, as the current host, may receive routine request data
+            such as an IP address, browser details, and requested page.
+          </p>
+          <ul>
+            <li>
+              Selecting <strong>Subscribe</strong> opens an external Google Form.
+              Google and veryloving Inc. may receive information the visitor
+              chooses to submit there.
+            </li>
+            <li>
+              Selecting a pre-order control opens a Stripe-hosted checkout.
+              Stripe and veryloving Inc. may receive checkout, contact, payment,
+              fraud-prevention, and order information according to the checkout
+              flow and their respective practices.
+            </li>
+            <li>
+              The privacy-enhanced YouTube embed and links to LinkedIn,
+              Instagram, and X are third-party services. Opening or interacting
+              with them may allow those services to process routine device,
+              request, account, or interaction information under their own
+              policies.
+            </li>
+          </ul>
+
+          <h2>Mobile app data categories</h2>
           <div
             class="table-wrap"
             role="region"
-            aria-label="Candidate app data categories and purposes"
+            aria-label="Reviewed mobile app data categories and purposes"
             tabindex="0"
           >
             <table>
@@ -109,9 +175,10 @@
                 <tr>
                   <th scope="row">Account and authentication data</th>
                   <td>
-                    When a user signs in, including the phone number or other
-                    sign-in identifier provided and account or session identifiers
-                    generated by the authentication service.
+                    When a user signs in, including a phone number and verification
+                    code, or the identity tokens and available name or email sent
+                    through an Apple or Google sign-in flow. The services also
+                    generate account and session identifiers.
                   </td>
                   <td>
                     Authenticate the user, maintain a signed-in session, and bind
@@ -121,36 +188,105 @@
                 <tr>
                   <th scope="row">Profile content</th>
                   <td>
-                    When a user chooses to add information such as a display name
-                    or profile image.
+                    When a user chooses to add or change information such as a
+                    display name, profile image, language, voice preference, or
+                    app settings.
                   </td>
                   <td>Display and manage the profile the user requested.</td>
                 </tr>
                 <tr>
-                  <th scope="row">Voice interaction data</th>
+                  <th scope="row">AI voice interaction data</th>
                   <td>
-                    When a user deliberately starts a voice interaction, including
-                    microphone audio and the resulting interaction content needed
-                    to complete that request.
+                    When a signed-in user deliberately starts a live voice
+                    interaction. Hume may receive typed text and microphone audio
+                    while the user is unmuted and may return transcripts,
+                    assistant audio, and voice-signal labels. The current client
+                    discards provider labels as safety facts and keeps its display
+                    transcript only in process memory. A voice-preview request
+                    sends bundled sample text and the selected voice identifier
+                    and configuration, not microphone audio or user-entered text.
+                    Provider and backend retention, training, and deletion
+                    settings remain unverified.
                   </td>
                   <td>Provide the user-started AI-assisted voice experience.</td>
                 </tr>
                 <tr>
-                  <th scope="row">Location data</th>
+                  <th scope="row">Foreground location and map data</th>
                   <td>
-                    When a location feature is enabled, the user grants the
-                    relevant device permission, and the user opens or requests that
-                    experience. Precision depends on the device setting.
+                    When the user opens an enabled map or location experience and
+                    grants foreground permission. While the map is focused and
+                    the app is active, the client may watch foreground location
+                    for the requested display. Mapbox may receive search text,
+                    foreground search-proximity coordinates rounded to four
+                    decimal places, or exact origin and destination coordinates
+                    for a requested route. These can constitute precise location.
+                    The current client does not request background location
+                    permission.
                   </td>
-                  <td>Render the requested map or location-based app experience.</td>
+                  <td>
+                    Render the requested map, search, route preview, or location
+                    experience.
+                  </td>
                 </tr>
                 <tr>
-                  <th scope="row">User-selected content</th>
+                  <th scope="row">User content and map memories</th>
                   <td>
-                    When a user chooses content for an enabled experience, such as
-                    an image, memory, or related text.
+                    When an authenticated user chooses to create an enabled map
+                    memory, including an image, note, emoji or type, exact
+                    coordinates, timestamps, and visibility selection. The
+                    reviewed live write flow currently forces self-only visibility.
                   </td>
-                  <td>Provide the specific experience selected by the user.</td>
+                  <td>Create, display, synchronize, update, or delete the requested content.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Offline demo fixtures</th>
+                  <td>
+                    In the offline demo, fictional danger-zone fixtures may be
+                    stored on the device with synthetic coordinates, category,
+                    level, description, radius, visibility, and recipient
+                    identifiers. The current live danger-report service fails
+                    closed and sends no report.
+                  </td>
+                  <td>Demonstrate a local interface without representing verified safety data.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Friends and social-connection data</th>
+                  <td>
+                    When an authenticated user searches for another user or
+                    manages a friend request, including user identifiers,
+                    display names, profile images, relationship state, and request
+                    counts.
+                  </td>
+                  <td>
+                    Provide the requested social connection. A friend is not an
+                    emergency contact and does not receive monitoring or location
+                    access from friendship alone.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">User-directed location sharing</th>
+                  <td>
+                    Only after the user presses Share, the app obtains a fresh
+                    foreground location and prepares exact coordinates, capture
+                    time, and a map link for the device's operating-system share
+                    sheet. The user chooses whether and where to send it.
+                  </td>
+                  <td>
+                    Complete the user's explicit sharing request. Opening the
+                    share sheet is not proof that a recipient received the data.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Development wearable diagnostics</th>
+                  <td>
+                    Only in an appropriately configured, signed-in NorthStar
+                    development flow, this may include a device identifier,
+                    parsed button event and raw byte, Bluetooth state and signal
+                    strength, event and session timestamps, and basic phone, app,
+                    and operating-system details. The store prototype and offline
+                    demo do not deliver this physical-wearable flow.
+                  </td>
+                  <td>Test device integration and diagnose reviewed development behavior.</td>
                 </tr>
                 <tr>
                   <th scope="row">Technical and diagnostic context</th>
@@ -162,16 +298,106 @@
                   </td>
                   <td>Operate, secure, troubleshoot, and improve the app.</td>
                 </tr>
+                <tr>
+                  <th scope="row">On-device data</th>
+                  <td>
+                    The current client uses device-protected storage for account
+                    credentials and local app storage for account-scoped friends;
+                    memory records that can include notes, image locations, and
+                    exact coordinates; map preferences; paired wearable owner,
+                    device name, identifier, and pairing time; selected settings;
+                    and bounded queued wearable events where that flow is enabled.
+                  </td>
+                  <td>
+                    Maintain the requested session and app state, support limited
+                    offline behavior, and retry eligible development events.
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
 
+          <h2>Notifications, in-app notices, and communications</h2>
+          <p>
+            The word “notification” can describe different mechanisms. In the
+            reviewed current app, their status is:
+          </p>
+          <div
+            class="table-wrap"
+            role="region"
+            aria-label="Current notification and communication status"
+            tabindex="0"
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Mechanism</th>
+                  <th scope="col">Current status</th>
+                  <th scope="col">What the user should understand</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">In-app popups and system dialogs</th>
+                  <td>
+                    Used for account or permission errors, feature limitations,
+                    development or simulation boundaries, device state, AI voice
+                    limitations, map or route errors, and destructive confirmations.
+                  </td>
+                  <td>
+                    These messages explain current app state or request a decision.
+                    They are not evidence that an external alert, safety action,
+                    or message was delivered.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Push and local notifications</th>
+                  <td>Disabled in the reviewed current app source.</td>
+                  <td>
+                    The client does not currently register a push token, schedule
+                    a local notification, or present a production push program.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">SMS, automated calls, and email</th>
+                  <td>
+                    When the user requests phone authentication, Twilio may send
+                    a one-time passcode by SMS to the number provided. No current
+                    safety, trusted-contact, or marketing flow automatically sends
+                    an SMS, places a call, sends email, or contacts emergency
+                    services.
+                  </td>
+                  <td>
+                    Any future external-messaging feature requires a reviewed
+                    recipient-consent, content, delivery, revocation, privacy, and
+                    legal contract before activation.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Operating-system share sheet</th>
+                  <td>Opened only after a user explicitly requests Quick Share.</td>
+                  <td>
+                    The user selects the destination. The chosen app or recipient
+                    then handles the shared content under its own practices.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            This durable notice does not replace a clear disclosure or consent at
+            the moment a permission, sensitive-data flow, safety limitation, or
+            future communication channel becomes relevant. A material limitation
+            must not be hidden solely in a legal document.
+          </p>
+
           <h2>Service providers</h2>
           <p>
-            An enabled feature may send only the information needed for the
-            user's request to a service provider. The current provider inventory
-            remains under review and must be verified against the final built
-            artifact. Candidate integrations include:
+            An enabled feature may send information to a service provider to
+            perform the user's request or operate that feature. The exact fields,
+            provider account settings, and current provider inventory remain
+            under review and must be verified against the final built artifact.
+            Candidate integrations include:
           </p>
           <ul>
             <li>
@@ -185,19 +411,61 @@
               Apple or Google platform services, as applicable to the device,
               authentication method, and distributed app build.
             </li>
+            <li>
+              Twilio for a user-requested phone authentication or
+              account-verification SMS in a supported live flow.
+            </li>
+            <li>
+              GitHub Pages, Google Forms, YouTube, Stripe, and linked social
+              services for the website interactions described above.
+            </li>
           </ul>
           <p>
-            No service-provider list should be treated as final until it has been
-            checked against the exact release configuration.
+            The VeryLoving backend, database, hosting, logging, support, and
+            provider-account configurations have not yet been verified as a
+            complete release inventory. No service-provider list should be
+            treated as final until it has been checked against the exact built
+            artifact, deployed services, account settings, contracts, and
+            subprocessors.
+          </p>
+
+          <h2>Advertising, analytics, sale, and targeted advertising</h2>
+          <p>
+            No dedicated advertising or product-analytics integration was found
+            in the reviewed current mobile source, and the static website does
+            not include an advertising pixel or analytics script. Mapbox and
+            other providers may still process operational or provider telemetry.
+            This source-code observation does not establish the practices of every
+            backend, provider, embedded service, checkout, form, or linked site.
+            A final notice must state whether personal information is sold,
+            shared for cross-context behavioral advertising, or used for targeted
+            advertising, and must provide any legally required opt-out or Global
+            Privacy Control mechanism after the company-wide inventory is verified.
           </p>
 
           <h2>Permissions and user choices</h2>
           <p>
-            Device permissions, including microphone, location, and photo access,
-            are controlled through the operating system. A user may deny or revoke
-            a permission in device settings, although the related feature may then
-            be unavailable. The app should request a permission only when it is
-            required for the specific enabled experience.
+            Device permissions, including microphone, foreground location,
+            Bluetooth, camera, photo-library access, and Apple or Google sign-in,
+            are controlled through the operating system or the corresponding
+            provider. A user may deny or revoke a permission in device settings,
+            although the related feature may then be unavailable. The app should
+            request a permission only when it is required for the specific enabled
+            experience. Push permission is not currently requested by the
+            reviewed shipping flow.
+          </p>
+
+          <h2>Sensitive data and automated inferences</h2>
+          <p>
+            Precise location, microphone audio, voice interaction content, and
+            data that may reveal or infer health or emotional information require
+            heightened review. The current client does not turn Hume voice-signal
+            labels into a distress or safety decision, but Hume's processing and
+            retention settings remain to be verified. The exact facts must be
+            evaluated for United States state privacy, consumer-health-data,
+            biometric, recording, and breach-notification requirements before a
+            relevant production feature is enabled. Broad acceptance of a legal
+            document is not a substitute for any separate consent required by law.
           </p>
 
           <h2>Retention, account deletion, and other requests</h2>
@@ -220,6 +488,17 @@
             Available request mechanisms will be documented before a reviewed
             release.
           </p>
+          <p>
+            Depending on applicable law and the verified release, a person may
+            have rights to ask about, access, correct, delete, or obtain a copy of
+            personal information, or to withdraw or appeal certain choices.
+            California and other state laws may provide additional rights,
+            including rights concerning sensitive information or sale and
+            sharing. The company's legal coverage, verification method,
+            authorized-agent process, appeal path, and response procedures remain
+            to be approved. Exercising a legally available privacy right will not
+            result in unlawful discrimination.
+          </p>
 
           <h2>Security</h2>
           <p>
@@ -233,16 +512,33 @@
           <h2>Children</h2>
           <p>
             The VeryLoving concept is not directed to children under 13. Age
-            eligibility and any additional protections must be confirmed before a
-            reviewed release. If you believe information associated with a child
-            has been provided, contact veryloving Inc. using the email above.
+            eligibility, an enforceable age-screening approach, and protections
+            for minors have not been approved for production. The current app
+            source does not establish a verified parental-consent workflow. If
+            you believe information associated with a child has been provided,
+            contact veryloving Inc. using the email above.
           </p>
 
           <h2>Safety boundary</h2>
           <p>
             VeryLoving is not an emergency service. App data, AI-assisted output,
-            location information, and device behavior do not guarantee monitoring,
-            message delivery, emergency response, or a safety outcome.
+            map or location information, a popup, a simulated observation, and
+            device behavior do not guarantee monitoring, message delivery,
+            emergency response, or a safety outcome. If someone may be in danger,
+            contact 911 or the appropriate local emergency service directly.
+          </p>
+
+          <h2>Review required before a United States launch</h2>
+          <p>
+            Before this candidate can become effective, veryloving Inc. must bind
+            it to an exact release; verify all data sources, recipients,
+            providers, storage, retention, deletion, security, and user-rights
+            workflows; resolve age eligibility and sensitive-data treatment; and
+            obtain named Product, Backend, Privacy, Security, and qualified Legal
+            approval. The separate release-candidate
+            <a href="terms.html">Terms of Use</a> may govern use of an approved
+            release after valid acceptance, but it cannot replace this notice or
+            any just-in-time disclosure or consent.
           </p>
 
           <h2>Changes to this notice</h2>
@@ -250,6 +546,9 @@
             This page will be revised when the reviewed data practices change. The
             date at the top will identify the current published candidate. A final
             notice must reflect the exact app build made available to users.
+            Material changes may require a new notice or affirmative choice before
+            the changed practice begins; merely editing this page may not be
+            sufficient.
           </p>
         </article>
       </div>
@@ -265,7 +564,7 @@
     <footer class="site-footer">
       <div class="footer-column footer-address"><p>2 Marina Blvd B300, San Francisco, CALIFORNIA 94123</p></div>
       <div class="footer-column footer-contact"><a href="tel:+16507626230"><span>650-762-6230</span></a><a href="mailto:george@verylovinginc.com"><span>GEORGE@VERYLOVINGINC.COM</span></a></div>
-      <nav class="footer-column footer-legal" aria-label="Legal"><a href="privacy.html" aria-current="page"><span>PRIVACY POLICY</span></a><a href="accessibility-statement.html"><span>ACCESSIBILITY STATEMENT</span></a></nav>
+      <nav class="footer-column footer-legal" aria-label="Legal"><a href="privacy.html" aria-current="page"><span>PRIVACY POLICY</span></a><a href="terms.html"><span>TERMS OF USE</span></a><a href="accessibility-statement.html"><span>ACCESSIBILITY STATEMENT</span></a></nav>
       <div class="footer-column footer-credit"><p>© 2025 BY VERYLOVING</p><p>BUILT AT FOUNDERS INC.</p></div>
     </footer>
   </body>
