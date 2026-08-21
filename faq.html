@@ -206,9 +206,11 @@
             <div>
               <p>
                 Accidental-activation safeguards and cancellation behavior remain
-                part of production hardware and human-factors design. The current
-                simulator records only explicit synthetic requests and produces no
-                alert, message, location share, vibration, or emergency action.
+                part of production hardware and human-factors design. In the current
+                simulator, a developer can recover from an interrupted synthetic
+                wearable request only by explicitly expiring it with a lab control;
+                that is test tooling, not a consumer cancellation feature. It produces no alert, message,
+                location share, vibration, or emergency action.
               </p>
             </div>
           </div>

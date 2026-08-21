@@ -183,7 +183,7 @@ const faqItems = [
   {
     question: "What happens if I press the charm button by accident?",
     answer:
-      "Accidental-activation safeguards and cancellation behavior remain part of production hardware and human-factors design. The current simulator records only explicit synthetic requests and produces no alert, message, location share, vibration, or emergency action.",
+      "Accidental-activation safeguards and cancellation behavior remain part of production hardware and human-factors design. In the current simulator, a developer can recover from an interrupted synthetic wearable request only by explicitly expiring it with a lab control; that is test tooling, not a consumer cancellation feature. It produces no alert, message, location share, vibration, or emergency action.",
   },
   {
     question: "Do I need a subscription to use the app?",
@@ -1302,7 +1302,8 @@ const productOverview = pages.get("products.html") ?? "";
 for (const requiredCopy of [
   "A connected-jewelry vision; current continuity behavior is software simulation only.",
   "A future product vision with a current no-capture, effect-free localhost contract prototype.",
-  "The mobile app records one correlated request at each simulator; each endpoint advances independently and partial results remain visibly partial.",
+  "The app shows each endpoint separately and says completed only after both reach executed and the developer explicitly ends the matching Home session.",
+  "Unknown, failed, expired, cancelled, or inconsistent evidence is never shown as success.",
 ]) {
   if (!normalizedText(productOverview).includes(requiredCopy)) {
     fail("products.html", `must retain the product-status boundary ${JSON.stringify(requiredCopy)}`);
@@ -1349,8 +1350,10 @@ if (valuesFor(wearablePage, "a", "href").some((href) => href.includes("testfligh
   fail("wearable.html", "must not publish a TestFlight link until its exact invitation URL is approved");
 }
 for (const requiredCopy of [
-  "Ready or blocked means only whether this local state machine can accept the rehearsal cue—not hardware, wearer, safety, or production readiness.",
+  "Readiness distinguishes a new request from a known retry.",
+  "a developer may recover from an interrupted fixture only by explicitly expiring it with a lab control.",
   "executed never means a person or device received anything.",
+  "A local reset keeps bounded duplicate-request tombstones until an explicit rebind",
   "The production-gate review mode remains local_demo and simulation_only and blocks continuity and haptic semantic writes.",
   "No physical wearable, vibration, message, location share, contact, emergency action, or external effect occurs.",
 ]) {
@@ -1381,7 +1384,9 @@ if (
 }
 for (const requiredCopy of [
   "a wearable has no direct authority over the Home endpoint.",
+  "Its correlation identifier follows the local intent, no-capture session, receipts, and events",
   "The synthetic session requests no capture, exposes no camera, and never accesses a browser microphone.",
+  "treats the rehearsal as completed only after both report executed and it explicitly ends the correlated Home session.",
   "A lost terminal receipt becomes unknown—not success.",
   "Ready, busy, or blocked describes only the process-memory harness—not a person, home, robot, or production system.",
   "The negative-control production-gate mode rejects every semantic request and remains synthetic.",
@@ -1431,15 +1436,19 @@ for (const required of [
   "A material limitation must not be hidden solely in a legal document",
   "GitHub Pages, Google Forms, YouTube, Stripe",
   "developer connects both same-computer simulators and presses its request control",
+  "marks a rehearsal completed only when both local intents report executed",
+  "Unknown, failed, expired, cancelled, or inconsistent evidence is not treated as success",
   "The Home Companion integration harness accepts a no-capture check-in fixture only",
   "Local integration and continuity-rehearsal data",
   "one endpoint succeeding does not establish the other succeeded",
+  "The Home correlation identifier follows its intent, session, receipts, and events",
+  "tombstones may remain in wearable process memory through a local reset until an explicit rebind",
   "same-computer development processes with no outbound network, persistence, physical device, or external effect",
   "loopback HTTP on the same computer",
   "not yet an effective production privacy policy",
-  "dafe7a0693063a20ba2d0d55867d5220f96fd7ed",
-  "4ccf1959d668d32b0db49a81d4d45867e4f6e5be",
-  "524a3c68debc211b19ebb31688cdd7cb1bcf7880",
+  "de5e213fb9b82c2cd579cb9442ab59524997b916",
+  "019d8f5ef9efa1f3f8402b92d6e1822af6e6a7bc",
+  "8d36fe20bb970907c79f5b8adbd67fc753f04850",
 ]) {
   if (!privacyText.includes(required)) {
     fail("privacy.html", `must preserve reviewed release boundary: ${required}`);
@@ -1473,6 +1482,10 @@ for (const required of [
   "does not register for production push notifications",
   "The coordinated rehearsal is available only in a developer-enabled mobile screen",
   "a partial result remains partial",
+  "marks the rehearsal completed only after both endpoints report executed",
+  "Unknown, failed, expired, cancelled, or inconsistent evidence is not success",
+  "manually refresh and reconcile local evidence",
+  "reset retains bounded duplicate-request tombstones until explicit rebind",
   "executed receipt means only that its local process-memory state machine advanced",
   "exposes no camera",
   "production-gate review modes remain local simulation and reject semantic work",
@@ -1481,9 +1494,9 @@ for (const required of [
   "No arbitration provision, class-action waiver, governing-law clause",
   "Privacy Notice",
   "george@verylovinginc.com",
-  "dafe7a0693063a20ba2d0d55867d5220f96fd7ed",
-  "4ccf1959d668d32b0db49a81d4d45867e4f6e5be",
-  "524a3c68debc211b19ebb31688cdd7cb1bcf7880",
+  "de5e213fb9b82c2cd579cb9442ab59524997b916",
+  "019d8f5ef9efa1f3f8402b92d6e1822af6e6a7bc",
+  "8d36fe20bb970907c79f5b8adbd67fc753f04850",
 ]) {
   if (!termsText.includes(required)) {
     fail("terms.html", `must preserve reviewed candidate boundary: ${required}`);

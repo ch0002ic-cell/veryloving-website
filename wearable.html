@@ -131,11 +131,11 @@
           </article>
           <article class="product-rule-row" role="listitem">
             <h3>03 · Local readiness</h3>
-            <p>Ready or blocked means only whether this local state machine can accept the rehearsal cue—not hardware, wearer, safety, or production readiness.</p>
+            <p>Readiness distinguishes a new request from a known retry. It describes only whether this local state machine can admit the cue—not hardware, wearer, safety, or production readiness.</p>
           </article>
           <article class="product-rule-row" role="listitem">
             <h3>04 · Evidence without assumed success</h3>
-            <p>Explicit advances create separate synthetic receipts. A missing terminal receipt becomes unknown; the prototype never manufactures success.</p>
+            <p>Explicit advances create separate synthetic receipts. A missing terminal receipt becomes unknown; a developer may recover from an interrupted fixture only by explicitly expiring it with a lab control.</p>
           </article>
         </div>
       </section>
@@ -150,6 +150,7 @@
           <div class="product-boundary-list" role="list">
             <p role="listitem">The cue is recorded only after an explicit developer action in the mobile lab; no monitoring or automatic trigger runs.</p>
             <p role="listitem">Requested, acknowledged, accepted, executing, and executed are local process-memory receipt states; executed never means a person or device received anything.</p>
+            <p role="listitem">A local reset keeps bounded duplicate-request tombstones until an explicit rebind, so an old request cannot silently become a new admission.</p>
             <p role="listitem">The production-gate review mode remains <code>local_demo</code> and <code>simulation_only</code> and blocks continuity and haptic semantic writes.</p>
             <p role="listitem">No physical wearable, vibration, message, location share, contact, emergency action, or external effect occurs. Full product specifications will be shared before launch.</p>
           </div>

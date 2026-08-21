@@ -69,10 +69,10 @@
 
           <p>
             <strong>Reviewed source baselines:</strong>
-            mobile <code>dafe7a0693063a20ba2d0d55867d5220f96fd7ed</code>,
-            wearable <code>4ccf1959d668d32b0db49a81d4d45867e4f6e5be</code>,
+            mobile <code>de5e213fb9b82c2cd579cb9442ab59524997b916</code>,
+            wearable <code>019d8f5ef9efa1f3f8402b92d6e1822af6e6a7bc</code>,
             and Home Companion
-            <code>524a3c68debc211b19ebb31688cdd7cb1bcf7880</code>.
+            <code>8d36fe20bb970907c79f5b8adbd67fc753f04850</code>.
             These engineering identifiers are not app versions or release
             approvals; any source or deployment change requires a new review.
           </p>
@@ -103,6 +103,12 @@
               request control. iOS Simulator uses loopback; Android Emulator uses
               its fixed host alias. Physical phones, LAN endpoints, direct
               wearable-to-Home authority, and automatic activation are not supported.
+            </li>
+            <li>
+              The app presents the wearable and Home outcomes separately. It marks
+              a rehearsal completed only when both local intents report executed and
+              the app explicitly ends the correlated Home session. Unknown, failed,
+              expired, cancelled, or inconsistent evidence is not treated as success.
             </li>
             <li>
               The Home Companion integration harness accepts a no-capture
@@ -297,9 +303,12 @@
                     ephemeral request correlation and idempotency values, simulated
                     wearable observations, readiness and fault codes, semantic
                     intent and session identifiers, and synthetic receipt states.
-                    The mobile app records one correlated request independently at
-                    each endpoint; one endpoint succeeding does not establish the
-                    other succeeded.
+                    The Home correlation identifier follows its intent, session,
+                    receipts, and events. The mobile app can manually refresh and
+                    reconcile each endpoint; one endpoint succeeding does not
+                    establish the other succeeded. Bounded duplicate-request
+                    tombstones may remain in wearable process memory through a
+                    local reset until an explicit rebind.
                   </td>
                   <td>
                     Rehearse and diagnose bounded local software contracts without

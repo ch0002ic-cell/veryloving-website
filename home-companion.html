@@ -87,8 +87,9 @@
             <p>
               A developer explicitly starts the rehearsal from the mobile app after
               both localhost endpoints are connected. Home Companion accepts only
-              the closed gentle-check-in payload; a wearable has no direct authority
-              over the Home endpoint.
+              the closed gentle-check-in payload. Its correlation identifier follows
+              the local intent, no-capture session, receipts, and events; a wearable
+              has no direct authority over the Home endpoint.
             </p>
           </div>
         </section>
@@ -120,7 +121,10 @@
             <p>
               Each explicit advance creates one synthetic receipt, keeping
               transport acknowledgement, acceptance, execution, and terminal
-              evidence distinct. A lost terminal receipt becomes unknown—not success.
+              evidence distinct. The mobile app reports each endpoint's outcome and
+              treats the rehearsal as completed only after both report executed and
+              it explicitly ends the correlated Home session. A lost terminal receipt
+              becomes unknown—not success.
             </p>
           </div>
         </section>
@@ -134,7 +138,7 @@
             <p>The local rehearsal is deliberately user-started, no-capture, effect-free, and fail-closed.</p>
           </div>
           <div class="product-boundary-list" role="list">
-            <p role="listitem"><strong>Explicit start.</strong><span>The mobile developer requests one correlated rehearsal and manually advances or ends its synthetic session.</span></p>
+            <p role="listitem"><strong>Explicit control.</strong><span>The mobile developer starts one correlated rehearsal, manually refreshes its evidence, and explicitly advances or ends its synthetic session.</span></p>
             <p role="listitem"><strong>No capture.</strong><span>No camera, microphone capture, audio provider, conversation, monitoring, notification, or location flow is involved.</span></p>
             <p role="listitem"><strong>Local readiness.</strong><span>Ready, busy, or blocked describes only the process-memory harness—not a person, home, robot, or production system.</span></p>
             <p role="listitem"><strong>Fail closed.</strong><span>Privacy or availability faults, lease reconciliation, rebind, and reset end or block work without silently resuming it.</span></p>

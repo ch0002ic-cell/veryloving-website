@@ -67,10 +67,10 @@
 
           <p>
             <strong>Reviewed source baselines:</strong>
-            mobile <code>dafe7a0693063a20ba2d0d55867d5220f96fd7ed</code>,
-            wearable <code>4ccf1959d668d32b0db49a81d4d45867e4f6e5be</code>,
+            mobile <code>de5e213fb9b82c2cd579cb9442ab59524997b916</code>,
+            wearable <code>019d8f5ef9efa1f3f8402b92d6e1822af6e6a7bc</code>,
             and Home Companion
-            <code>524a3c68debc211b19ebb31688cdd7cb1bcf7880</code>.
+            <code>8d36fe20bb970907c79f5b8adbd67fc753f04850</code>.
             These engineering identifiers are not app versions or release
             approvals; any source or deployment change requires a new review.
           </p>
@@ -224,11 +224,24 @@
             mobile screen and begins after the developer connects both
             same-computer simulators and explicitly requests it. The mobile app
             records independent requests at the wearable and Home Companion
-            endpoints; a partial result remains partial. Each endpoint advances
-            only through explicit lab controls. An <em>executed</em> receipt means
-            only that its local process-memory state machine advanced, not that a
-            check-in, message, vibration, audio cue, person, or physical device was
-            reached.
+            endpoints under one correlation value; the Home value follows its
+            intent, session, receipts, and events; a partial result remains partial.
+            The app marks the rehearsal completed only after both endpoints report
+            executed and it explicitly ends the correlated Home session. Unknown,
+            failed, expired, cancelled, or inconsistent evidence is not success.
+            Each endpoint advances only through explicit lab controls. An
+            <em>executed</em> receipt means only that its local process-memory state
+            machine advanced, not that a check-in, message, vibration, audio cue,
+            person, or physical device was reached.
+          </p>
+          <p>
+            A developer may manually refresh and reconcile local evidence or recover
+            from an interrupted wearable fixture by explicitly expiring it with a
+            lab control. A wearable
+            reset retains bounded duplicate-request tombstones until explicit rebind,
+            and readiness distinguishes a new admission from a known retry. These
+            are developer test controls, not consumer cancellation, delivery, or
+            emergency features.
           </p>
           <p>
             The Home Companion rehearsal requires no capture, exposes no camera,
