@@ -52,7 +52,7 @@
         <article class="document-shell">
           <p>
             <strong>Last updated:</strong>
-            <time datetime="2026-08-21">21 August 2026</time>
+            <time datetime="2026-08-22">22 August 2026</time>
           </p>
 
           <p class="status-note">
@@ -67,10 +67,10 @@
 
           <p>
             <strong>Reviewed source baselines:</strong>
-            mobile <code>c03aa688806142a4953fbb3bbf470402c4081f40</code>,
-            wearable <code>59c38ac641f71048aa0d0a109d0869f861cb86ec</code>,
+            mobile <code>dafe7a0693063a20ba2d0d55867d5220f96fd7ed</code>,
+            wearable <code>4ccf1959d668d32b0db49a81d4d45867e4f6e5be</code>,
             and Home Companion
-            <code>3bdb1a8fbdc04de4cd909e8008ad0dd7267fd6fb</code>.
+            <code>524a3c68debc211b19ebb31688cdd7cb1bcf7880</code>.
             These engineering identifiers are not app versions or release
             approvals; any source or deployment change requires a new review.
           </p>
@@ -212,17 +212,41 @@
           <h2>10. Wearables, Home Companion, and simulations</h2>
           <p>
             Development and localhost experiences may use synthetic battery,
-            Bluetooth, cellular, gesture, haptic, presentation, or other fixture
-            data. Synthetic data does not prove that physical hardware, sensing,
-            connectivity, an external effect, or a production safety capability
+            Bluetooth, cellular, gesture, haptic, continuity-cue, readiness,
+            session, presentation, receipt, or other fixture data. Synthetic data
+            does not prove that physical hardware, sensing, connectivity, an
+            external effect, human receipt, or a production safety capability
             exists. The reviewed wearable integration does not implement
             physiological heart-rate or heartbeat sensing.
           </p>
           <p>
+            The coordinated rehearsal is available only in a developer-enabled
+            mobile screen and begins after the developer connects both
+            same-computer simulators and explicitly requests it. The mobile app
+            records independent requests at the wearable and Home Companion
+            endpoints; a partial result remains partial. Each endpoint advances
+            only through explicit lab controls. An <em>executed</em> receipt means
+            only that its local process-memory state machine advanced, not that a
+            check-in, message, vibration, audio cue, person, or physical device was
+            reached.
+          </p>
+          <p>
+            The Home Companion rehearsal requires no capture, exposes no camera,
+            does not access a browser microphone, and permits no microphone
+            capture. It connects no physical robot, accepts no direct wearable
+            authority, makes no outbound request, and persists no session after
+            process exit. Privacy or availability faults, rebind, reset, and lease
+            reconciliation fail closed. The production-gate review modes remain
+            local simulation and reject semantic work; they are not production or
+            staging services.
+          </p>
+          <p>
             Physical hardware, firmware, cellular service, manufacturing,
-            warranties, repairs, returns, safety certification, and support
-            lifetime require separately reviewed product and purchase terms.
-            These candidate Terms do not make those commitments.
+            device identity, secure remote transport, household consent policy,
+            physical privacy evidence, warranties, repairs, returns, safety
+            certification, operational readiness, and support lifetime require
+            separately reviewed implementation, validation, product, and purchase
+            terms. These candidate Terms do not make those commitments.
           </p>
 
           <h2>11. Notifications and communications</h2>

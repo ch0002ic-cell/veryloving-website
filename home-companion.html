@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Explore VeryLoving’s vision for a warm, thoughtful Home Companion—an early research concept shaped around comfort, connection, and trust."
+      content="Explore the VeryLoving Home Companion vision and its current mobile-orchestrated, no-capture localhost prototype."
     />
     <meta name="theme-color" content="#fbf8f0" />
     <link rel="canonical" href="https://ch0002ic-cell.github.io/veryloving-website/home-companion.html" />
@@ -14,7 +14,7 @@
     <meta property="og:title" content="Home Companion | VeryLoving" />
     <meta
       property="og:description"
-      content="Explore VeryLoving’s vision for a warm, thoughtful Home Companion—an early research concept shaped around comfort, connection, and trust."
+      content="Explore the VeryLoving Home Companion vision and its current mobile-orchestrated, no-capture localhost prototype."
     />
     <meta property="og:url" content="https://ch0002ic-cell.github.io/veryloving-website/home-companion.html" />
     <meta name="twitter:card" content="summary" />
@@ -37,11 +37,11 @@
           <nav class="product-breadcrumb" aria-label="Breadcrumb">
             <a href="products.html">Products</a><span aria-hidden="true">/</span><span aria-current="page">Home Companion</span>
           </nav>
-          <p class="product-status-line">A future VeryLoving concept</p>
+          <p class="product-status-line">Future vision + local software prototype</p>
           <h1 id="home-companion-title">Bringing warmer companionship home</h1>
           <p class="product-lede">
-            A thoughtful vision for more comfort, connection, and companionship
-            in everyday life.
+            A thoughtful vision for comfort and connection at home, now supported
+            by a bounded software contract for careful engineering rehearsal.
           </p>
           <div class="product-actions">
             <a class="pill pill-coral product-pill" href="#research-directions">Explore the vision</a>
@@ -61,14 +61,16 @@
 
       <section class="product-story" aria-labelledby="research-status-title">
         <div class="product-story-copy">
-          <p class="product-status-line">Long-term vision</p>
+          <p class="product-status-line">Long-term vision, honest current boundary</p>
           <h2 id="research-status-title">Technology that feels more human</h2>
           <p>
             Home Companion is an early research concept and is not available today.
           </p>
           <p>
             We’re exploring what a calm, friendly presence could mean for people
-            who want more warmth and connection at home.
+            who want more warmth and connection at home. The current implementation
+            is a loopback-only, process-memory simulator—not a physical robot or a
+            production service.
           </p>
         </div>
       </section>
@@ -80,11 +82,13 @@
             <p aria-hidden="true">Warm<br />presence</p>
           </div>
           <div class="feature-copy feature-copy-dark product-feature-copy">
-            <p class="product-status-line">Comfort at home</p>
-            <h2 id="warm-presence-title">Friendly, not industrial</h2>
+            <p class="product-status-line">Mobile-orchestrated continuity</p>
+            <h2 id="warm-presence-title">A gentle check-in, requested on purpose</h2>
             <p>
-              We’re exploring a calm, welcoming design that could feel at home in
-              personal spaces—not clinical or cold.
+              A developer explicitly starts the rehearsal from the mobile app after
+              both localhost endpoints are connected. Home Companion accepts only
+              the closed gentle-check-in payload; a wearable has no direct authority
+              over the Home endpoint.
             </p>
           </div>
         </section>
@@ -95,11 +99,12 @@
             <p aria-hidden="true">Opt in<br />first</p>
           </div>
           <div class="feature-copy product-feature-copy">
-            <p class="product-status-line">Supportive routines</p>
+            <p class="product-status-line">No-capture session</p>
             <h2 id="routines-title">Helpful, always on your terms</h2>
             <p>
-              Our research looks at gentle reminders and everyday routines that
-              begin with a clear choice from the person using them.
+              The synthetic session requests no capture, exposes no camera, and
+              never accesses a browser microphone. Capture remains prohibited and
+              inactive throughout the rehearsal, including its bounded handoff lease.
             </p>
           </div>
         </section>
@@ -110,11 +115,12 @@
             <p aria-hidden="true">Human<br />connection</p>
           </div>
           <div class="feature-copy product-feature-copy">
-            <p class="product-status-line">People come first</p>
-            <h2 id="connection-title">Designed to support connection</h2>
+            <p class="product-status-line">Receipts without assumptions</p>
+            <h2 id="connection-title">Evidence stays precise</h2>
             <p>
-              We’re exploring how thoughtful design could bring comfort and
-              companionship while keeping real relationships at the center.
+              Each explicit advance creates one synthetic receipt, keeping
+              transport acknowledgement, acceptance, execution, and terminal
+              evidence distinct. A lost terminal receipt becomes unknown—not success.
             </p>
           </div>
         </section>
@@ -125,13 +131,13 @@
           <div class="product-boundary-heading">
             <p class="product-status-line">Designed around trust</p>
             <h2 id="privacy-title">Respect belongs at the heart of the home</h2>
-            <p>Privacy, consent, and healthy boundaries will guide every step of this research.</p>
+            <p>The local rehearsal is deliberately user-started, no-capture, effect-free, and fail-closed.</p>
           </div>
           <div class="product-boundary-list" role="list">
-            <p role="listitem"><strong>Your choice.</strong><span>Any interaction should be clear, intentional, and easy to control.</span></p>
-            <p role="listitem"><strong>Respect for shared spaces.</strong><span>Everyone at home should understand how a companion fits into their environment.</span></p>
-            <p role="listitem"><strong>People come first.</strong><span>Technology should support—not replace—the relationships and professional care people rely on.</span></p>
-            <p role="listitem"><strong>Trust over time.</strong><span>Any future product would need clear privacy choices, responsible updates, and long-term support.</span></p>
+            <p role="listitem"><strong>Explicit start.</strong><span>The mobile developer requests one correlated rehearsal and manually advances or ends its synthetic session.</span></p>
+            <p role="listitem"><strong>No capture.</strong><span>No camera, microphone capture, audio provider, conversation, monitoring, notification, or location flow is involved.</span></p>
+            <p role="listitem"><strong>Local readiness.</strong><span>Ready, busy, or blocked describes only the process-memory harness—not a person, home, robot, or production system.</span></p>
+            <p role="listitem"><strong>Fail closed.</strong><span>Privacy or availability faults, lease reconciliation, rebind, and reset end or block work without silently resuming it.</span></p>
           </div>
         </div>
       </section>
@@ -142,11 +148,13 @@
           <p aria-hidden="true">Built<br />with care</p>
         </div>
         <div class="feature-copy product-feature-copy">
-          <p class="product-status-line">A thoughtful path forward</p>
-          <h2 id="no-integration-title">From idea to home, one step at a time</h2>
+          <p class="product-status-line">Production gates remain closed</p>
+          <h2 id="no-integration-title">From idea to home, one verified step at a time</h2>
           <p>
-            We’ll keep learning what makes a companion feel genuinely warm,
-            useful, and welcome before deciding what a future product should become.
+            The negative-control production-gate mode rejects every semantic
+            request and remains synthetic. Product device identity, secure remote
+            transport, household consent policy, physical privacy evidence,
+            hardware validation, and release approval all remain future work.
           </p>
         </div>
       </section>
@@ -154,7 +162,12 @@
       <section class="product-cta" aria-labelledby="research-cta-title">
         <div class="product-cta-inner">
           <p class="product-status-line">Follow the journey</p>
-          <h2 id="research-cta-title">See what VeryLoving is imagining next</h2>
+          <h2 id="research-cta-title">A careful path from prototype to home</h2>
+          <p class="product-cta-copy">
+            Current receipts prove only local software behavior. A future product
+            would require physical-device, privacy, safety, security,
+            accessibility, human-factors, operational, and regulatory validation.
+          </p>
           <div class="product-actions">
             <a class="pill pill-coral product-pill" href="products.html">Explore all products</a>
             <a class="product-text-link" href="wearable.html">Discover the wearable</a>

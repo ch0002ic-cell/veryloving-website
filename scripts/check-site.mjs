@@ -138,62 +138,67 @@ const homeImages = [
 
 const homeCopy = [
   "Bringing warmer companionship with VeryLoving",
-  "More than jewelry, it brings warmth, connection, and peace of mind to every journey.",
+  "More than jewelry, our vision brings warmth, connection, and peace of mind closer on every journey.",
   "Veryloving,Inc. is a Silicon Valley–based AI safety technology company dedicated to advancing personal safety, AI-powered emotional companionship, and next-generation wearable intelligence for a global market. Founded in 2025, the company began its global expansion in 2026.",
-  "Our multidisciplinary team combines expertise in artificial intelligence, smart hardware engineering, and global connectivity to develop the next generation of the Wearable AI Guardian System—designed to protect users in critical moments while providing warmth, reassurance, and companionship in everyday life.",
+  "Our multidisciplinary team combines expertise in artificial intelligence, smart hardware engineering, and global connectivity to develop the next generation of the Wearable AI Guardian System—intended to support user-directed safety experiences while providing warmth, reassurance, and companionship in everyday life. Current prototypes do not provide automatic monitoring, emergency dispatch, or a guaranteed safety outcome.",
   "In 2026, Veryloving AI showcased its innovations at the Consumer Electronics Show (CES) and received recognition at BEYOND Expo for innovation, as well as a Silicon Valley wearable technology innovation award. The company also actively participates in global conversations on women's safety, AI, and emerging technologies.",
   "Our mission is simple: to make the world safer—and more compassionate.",
   "Connect to a caring voice",
-  "Tap your jewelry to hear a calming AI voice companion that offers supportive conversation and gentle encouragement throughout your day.",
+  "Our product vision pairs a deliberate jewelry tap with a calming AI voice companion. In the current app, the user still chooses when to press Start and begin a supportive conversation.",
   "Win $200 by following us on",
   "Wear peace of mind",
   "A beautifully designed accessory that combines elegance and smart connectivity, bringing comfort and confidence to everyday life.",
   "Trigger a loud alert",
-  "Designed for everyday wear, the charm remains discreet and can emit a loud alert sound when activated.",
-  "Stay connected in real time",
-  "Inspired by the idea of a guardian angel, the Veryloving charm helps users stay connected with loved ones by allowing them to share their location when they choose.",
+  "The planned charm is designed to remain discreet and provide a loud local alert when deliberately activated, subject to final physical-hardware and acoustic validation.",
+  "Share when you choose",
+  "The VeryLoving app can prepare a fresh foreground location for the phone’s share sheet after the user requests it. The user selects the destination; opening the sheet does not prove delivery.",
 ];
 
 const faqItems = [
   {
     question: "How does the Veryloving charm work?",
     answer:
-      "The Veryloving charm is a wearable accessory designed to be worn as jewelry. It connects with your smartphone through wireless technology and a companion mobile app to enable connected features and experiences.",
+      "The VeryLoving charm is envisioned as jewelry that works with a smartphone and companion app. The current engineering milestone uses software-only localhost simulators; it does not implement or connect physical jewelry, a radio, or a safety service.",
   },
   {
     question: "How long does the battery last?",
-    answer: "The battery lasts about 7–14 days, depending on usage.",
+    answer:
+      "Seven to fourteen days is a design target, not a validated current specification. Final battery life will depend on physical hardware, firmware, radio use, charging, environment, and independent testing.",
   },
   {
     question: "Is the jewelry water-resistant?",
     answer:
-      "Yes. It’s resistant to water splashes and sweat. We don’t recommend fully submerging it in water.",
+      "Splash and sweat resistance is a product target. A final ingress rating and care instructions will be published only after the production design is tested. Until then, do not assume water resistance.",
   },
   {
     question: "Who can see my location?",
-    answer: "Only the contacts you choose will be able to see your location.",
+    answer:
+      "The current Quick Share flow obtains a fresh foreground location only after you press Share and opens your phone’s share sheet. You choose the destination. Opening the sheet does not prove delivery, and a VeryLoving friend does not automatically receive location access.",
   },
   {
     question: "Does the jewelry work without a phone connection?",
     answer:
-      "The Veryloving charm connects with your smartphone through wireless technology and works together with the companion mobile app to enable its smart features.",
+      "The product vision is designed to work with the VeryLoving mobile app. The current software rehearsal also requires the app and two same-computer simulators; it does not establish phone-independent, cellular, or physical-wearable operation.",
   },
   {
     question: "What happens if I press the charm button by accident?",
     answer:
-      "The charm includes safeguards to help prevent accidental activation. If the button is pressed unintentionally, the action can be canceled easily by holding the star button for 5 seconds or cancel through the companion app.",
+      "Accidental-activation safeguards and cancellation behavior remain part of production hardware and human-factors design. The current simulator records only explicit synthetic requests and produces no alert, message, location share, vibration, or emergency action.",
   },
   {
     question: "Do I need a subscription to use the app?",
-    answer: "No. Currently, you can enjoy the in-app experience for free!",
+    answer:
+      "Current prototype experiences do not require a paid subscription. Final launch pricing, included features, and any optional plan will be disclosed before purchase or enrollment.",
   },
   {
     question: "Where do you ship the jewelry?",
-    answer: "We currently ship within the United States.",
+    answer:
+      "Pre-orders are currently offered for the United States. Final shipping coverage, eligibility, timing, taxes, returns, and support terms will be shown in the approved purchase terms.",
   },
   {
     question: "When can I buy it?",
-    answer: "You can pre-order it now! Shipping summer 2026.",
+    answer:
+      "You can pre-order it now. Delivery timing, final specifications, and purchase terms remain subject to confirmation; an estimate is not a guaranteed ship date.",
   },
   {
     question: "Who can I reach out to with more questions?",
@@ -843,7 +848,7 @@ const expectedHomeH2 = [
   "Win $200 by following us on",
   "Wear peace of mind",
   "Trigger a loud alert",
-  "Stay connected in real time",
+  "Share when you choose",
   "Be the 1st guardian angel to make our world veryloving",
 ];
 if (JSON.stringify(homeH2) !== JSON.stringify(expectedHomeH2)) {
@@ -1016,13 +1021,16 @@ const productPageRequirements = new Map([
       breadcrumbLinks: [],
       breadcrumbCurrent: "Products",
       copy: [
-        "VeryLoving products",
+        "Product vision + current prototype",
         "Personal safety, with a more human touch",
+        "Today’s coordinated prototype is an engineering rehearsal",
         "NorthStar wearable",
         "Home Companion",
         "Company-reported milestones",
         "not evidence of medical validation, product readiness, or a guaranteed safety result.",
         "Explore the VeryLoving family",
+        "Coordinated rehearsal",
+        "Production path",
       ],
       minimumFeatures: 3,
       needsRules: true,
@@ -1053,15 +1061,19 @@ const productPageRequirements = new Map([
       breadcrumbLinks: ["products.html"],
       breadcrumbCurrent: "Personal wearable",
       copy: [
-        "NorthStar wearable",
-        "Designed to work with your phone",
+        "NorthStar vision + software prototype",
+        "A connected vision, rehearsed in software",
         "Meet Capybear",
         "Wear peace of mind",
         "Share only when you choose",
-        "How NorthStar is designed to work",
-        "NorthStar is designed to work with your phone",
+        "From product vision to verified prototype",
+        "Explicit rehearsal cue",
+        "Local readiness",
+        "Evidence without assumed success",
+        "Simulation-only boundary",
         "Full product specifications will be shared before launch.",
-        "Mobile beta access",
+        "Prototype and production path",
+        "Built for iOS and Android development",
       ],
       minimumFeatures: 3,
       needsRules: true,
@@ -1095,13 +1107,19 @@ const productPageRequirements = new Map([
       breadcrumbLinks: ["products.html"],
       breadcrumbCurrent: "Home Companion",
       copy: [
-        "A future VeryLoving concept",
+        "Future vision + local software prototype",
         "Home Companion is an early research concept and is not available today.",
-        "Friendly, not industrial",
+        "Mobile-orchestrated continuity",
+        "A gentle check-in, requested on purpose",
+        "No-capture session",
         "Helpful, always on your terms",
-        "Designed to support connection",
+        "Receipts without assumptions",
+        "Evidence stays precise",
         "Respect belongs at the heart of the home",
-        "From idea to home, one step at a time",
+        "No capture.",
+        "Production gates remain closed",
+        "From idea to home, one verified step at a time",
+        "A careful path from prototype to home",
       ],
       minimumFeatures: 4,
       needsRules: false,
@@ -1282,8 +1300,9 @@ for (const [page, requirements] of productPageRequirements) {
 
 const productOverview = pages.get("products.html") ?? "";
 for (const requiredCopy of [
-  "Connected jewelry designed for warmth, confidence, and everyday companionship.",
-  "A future product vision centered on warmth and companionship at home.",
+  "A connected-jewelry vision; current continuity behavior is software simulation only.",
+  "A future product vision with a current no-capture, effect-free localhost contract prototype.",
+  "The mobile app records one correlated request at each simulator; each endpoint advances independently and partial results remain visibly partial.",
 ]) {
   if (!normalizedText(productOverview).includes(requiredCopy)) {
     fail("products.html", `must retain the product-status boundary ${JSON.stringify(requiredCopy)}`);
@@ -1329,6 +1348,16 @@ if (
 if (valuesFor(wearablePage, "a", "href").some((href) => href.includes("testflight.apple.com"))) {
   fail("wearable.html", "must not publish a TestFlight link until its exact invitation URL is approved");
 }
+for (const requiredCopy of [
+  "Ready or blocked means only whether this local state machine can accept the rehearsal cue—not hardware, wearer, safety, or production readiness.",
+  "executed never means a person or device received anything.",
+  "The production-gate review mode remains local_demo and simulation_only and blocks continuity and haptic semantic writes.",
+  "No physical wearable, vibration, message, location share, contact, emergency action, or external effect occurs.",
+]) {
+  if (!normalizedText(wearablePage).includes(requiredCopy)) {
+    fail("wearable.html", `must retain simulator truth boundary ${JSON.stringify(requiredCopy)}`);
+  }
+}
 
 const homeCompanionPage = pages.get("home-companion.html") ?? "";
 if (valuesFor(homeCompanionPage, "a", "href").some((href) => href.startsWith("https://buy.stripe.com/"))) {
@@ -1349,6 +1378,17 @@ if (
   )
 ) {
   fail("home-companion.html", "trust rows must use one consistent label and detail column");
+}
+for (const requiredCopy of [
+  "a wearable has no direct authority over the Home endpoint.",
+  "The synthetic session requests no capture, exposes no camera, and never accesses a browser microphone.",
+  "A lost terminal receipt becomes unknown—not success.",
+  "Ready, busy, or blocked describes only the process-memory harness—not a person, home, robot, or production system.",
+  "The negative-control production-gate mode rejects every semantic request and remains synthetic.",
+]) {
+  if (!normalizedText(homeCompanionPage).includes(requiredCopy)) {
+    fail("home-companion.html", `must retain simulator truth boundary ${JSON.stringify(requiredCopy)}`);
+  }
 }
 
 const siteText = shippedHtml.join("\n");
@@ -1390,10 +1430,16 @@ for (const required of [
   "Operating-system share sheet",
   "A material limitation must not be hidden solely in a legal document",
   "GitHub Pages, Google Forms, YouTube, Stripe",
+  "developer connects both same-computer simulators and presses its request control",
+  "The Home Companion integration harness accepts a no-capture check-in fixture only",
+  "Local integration and continuity-rehearsal data",
+  "one endpoint succeeding does not establish the other succeeded",
+  "same-computer development processes with no outbound network, persistence, physical device, or external effect",
+  "loopback HTTP on the same computer",
   "not yet an effective production privacy policy",
-  "c03aa688806142a4953fbb3bbf470402c4081f40",
-  "59c38ac641f71048aa0d0a109d0869f861cb86ec",
-  "3bdb1a8fbdc04de4cd909e8008ad0dd7267fd6fb",
+  "dafe7a0693063a20ba2d0d55867d5220f96fd7ed",
+  "4ccf1959d668d32b0db49a81d4d45867e4f6e5be",
+  "524a3c68debc211b19ebb31688cdd7cb1bcf7880",
 ]) {
   if (!privacyText.includes(required)) {
     fail("privacy.html", `must preserve reviewed release boundary: ${required}`);
@@ -1425,14 +1471,19 @@ for (const required of [
   "VeryLoving is not an emergency service",
   "does not implement physiological heart-rate or heartbeat sensing",
   "does not register for production push notifications",
+  "The coordinated rehearsal is available only in a developer-enabled mobile screen",
+  "a partial result remains partial",
+  "executed receipt means only that its local process-memory state machine advanced",
+  "exposes no camera",
+  "production-gate review modes remain local simulation and reject semantic work",
   "These candidate Terms do not establish a final product specification",
   "Any sweepstakes, contest, or giveaway must have separately reviewed official rules",
   "No arbitration provision, class-action waiver, governing-law clause",
   "Privacy Notice",
   "george@verylovinginc.com",
-  "c03aa688806142a4953fbb3bbf470402c4081f40",
-  "59c38ac641f71048aa0d0a109d0869f861cb86ec",
-  "3bdb1a8fbdc04de4cd909e8008ad0dd7267fd6fb",
+  "dafe7a0693063a20ba2d0d55867d5220f96fd7ed",
+  "4ccf1959d668d32b0db49a81d4d45867e4f6e5be",
+  "524a3c68debc211b19ebb31688cdd7cb1bcf7880",
 ]) {
   if (!termsText.includes(required)) {
     fail("terms.html", `must preserve reviewed candidate boundary: ${required}`);
@@ -1491,10 +1542,10 @@ function checkLegalDocumentStructure(
   }
 
   const reviewDates = tags(documentMarkup, "time").filter(
-    (tag) => attributes(tag).get("datetime") === "2026-08-21",
+    (tag) => attributes(tag).get("datetime") === "2026-08-22",
   );
   if (reviewDates.length !== 1) {
-    fail(file, "must contain one semantic 2026-08-21 review date");
+    fail(file, "must contain one semantic 2026-08-22 review date");
   }
 
   if (!valuesFor(documentMarkup, "a", "href").includes(requiredDocumentHref)) {

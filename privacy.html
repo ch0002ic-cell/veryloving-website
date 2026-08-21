@@ -52,7 +52,7 @@
         <article class="document-shell">
           <p>
             <strong>Last updated:</strong>
-            <time datetime="2026-08-21">21 August 2026</time>
+            <time datetime="2026-08-22">22 August 2026</time>
           </p>
 
           <p class="status-note">
@@ -69,10 +69,10 @@
 
           <p>
             <strong>Reviewed source baselines:</strong>
-            mobile <code>c03aa688806142a4953fbb3bbf470402c4081f40</code>,
-            wearable <code>59c38ac641f71048aa0d0a109d0869f861cb86ec</code>,
+            mobile <code>dafe7a0693063a20ba2d0d55867d5220f96fd7ed</code>,
+            wearable <code>4ccf1959d668d32b0db49a81d4d45867e4f6e5be</code>,
             and Home Companion
-            <code>3bdb1a8fbdc04de4cd909e8008ad0dd7267fd6fb</code>.
+            <code>524a3c68debc211b19ebb31688cdd7cb1bcf7880</code>.
             These engineering identifiers are not app versions or release
             approvals; any source or deployment change requires a new review.
           </p>
@@ -96,6 +96,19 @@
               heart-rate or heartbeat sensing. Wearable and Home Companion
               localhost simulators use synthetic, process-memory data and do not
               establish a physical device, monitoring, or external effect.
+            </li>
+            <li>
+              The debug-only mobile continuity rehearsal starts only after a
+              developer connects both same-computer simulators and presses its
+              request control. iOS Simulator uses loopback; Android Emulator uses
+              its fixed host alias. Physical phones, LAN endpoints, direct
+              wearable-to-Home authority, and automatic activation are not supported.
+            </li>
+            <li>
+              The Home Companion integration harness accepts a no-capture
+              check-in fixture only. It does not expose a camera or access a
+              browser microphone, and its session always reports capture as
+              prohibited and inactive. It does not call an AI or voice provider.
             </li>
             <li>
               The current client does not provide automatic danger, distress, or
@@ -277,16 +290,22 @@
                   </td>
                 </tr>
                 <tr>
-                  <th scope="row">Development wearable diagnostics</th>
+                  <th scope="row">Local integration and continuity-rehearsal data</th>
                   <td>
-                    Only in an appropriately configured, signed-in NorthStar
-                    development flow, this may include a device identifier,
-                    parsed button event and raw byte, Bluetooth state and signal
-                    strength, event and session timestamps, and basic phone, app,
-                    and operating-system details. The store prototype and offline
-                    demo do not deliver this physical-wearable flow.
+                    Only in the developer-enabled lab, this may include synthetic
+                    endpoint and binding identifiers, profile and revision values,
+                    ephemeral request correlation and idempotency values, simulated
+                    wearable observations, readiness and fault codes, semantic
+                    intent and session identifiers, and synthetic receipt states.
+                    The mobile app records one correlated request independently at
+                    each endpoint; one endpoint succeeding does not establish the
+                    other succeeded.
                   </td>
-                  <td>Test device integration and diagnose reviewed development behavior.</td>
+                  <td>
+                    Rehearse and diagnose bounded local software contracts without
+                    representing hardware telemetry, physical execution, human
+                    receipt, monitoring, or a safety outcome.
+                  </td>
                 </tr>
                 <tr>
                   <th scope="row">Technical and diagnostic context</th>
@@ -307,6 +326,9 @@
                     exact coordinates; map preferences; paired wearable owner,
                     device name, identifier, and pairing time; selected settings;
                     and bounded queued wearable events where that flow is enabled.
+                    Local-simulator bearer tokens and correlated rehearsal state are
+                    held only in app process memory and are cleared when the lab
+                    disconnects, leaves the screen, or moves out of the active state.
                   </td>
                   <td>
                     Maintain the requested session and app state, support limited
@@ -408,6 +430,11 @@
               user.
             </li>
             <li>
+              The wearable and Home Companion localhost simulators are not service
+              providers: they are same-computer development processes with no
+              outbound network, persistence, physical device, or external effect.
+            </li>
+            <li>
               Apple or Google platform services, as applicable to the device,
               authentication method, and distributed app build.
             </li>
@@ -451,7 +478,9 @@
             provider. A user may deny or revoke a permission in device settings,
             although the related feature may then be unavailable. The app should
             request a permission only when it is required for the specific enabled
-            experience. Push permission is not currently requested by the
+            experience. The Home Companion localhost harness does not request
+            camera or browser-microphone access, and its Guardian check-in fixture
+            requires no capture. Push permission is not currently requested by the
             reviewed shipping flow.
           </p>
 
@@ -507,6 +536,15 @@
             storage controls, must be verified for the exact release. No method of
             storage or transmission can be guaranteed to be completely secure.
             Storage safeguards remain under verification for the exact release.
+          </p>
+          <p>
+            The developer-only integration is a deliberate exception: it uses
+            loopback HTTP on the same computer, with a new bearer token generated
+            for each simulator process. The token is manually supplied to the app,
+            kept in memory, and is not product authentication or user identity.
+            The services remain bound to loopback, accept only fixed emulator Host
+            values, and must not be exposed through a LAN, tunnel, or public proxy.
+            No sensitive or production information should be entered into the lab.
           </p>
 
           <h2>Children</h2>
