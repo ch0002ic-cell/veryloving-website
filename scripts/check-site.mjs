@@ -111,6 +111,7 @@ const expectedFonts = new Map([
 
 const expectedFiles = new Set([
   ".gitignore",
+  ".github/workflows/ci.yml",
   ...expectedPages.keys(),
   ...expectedAssets.keys(),
   ...expectedFonts.keys(),
@@ -471,6 +472,34 @@ for (const page of expectedPages.keys()) {
   } catch (error) {
     fail(page, `cannot be read (${error.message})`);
   }
+}
+
+try {
+  const workflow = await readFile(
+    path.join(root, ".github/workflows/ci.yml"),
+    "utf8",
+  );
+  const actionPins = [
+    "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+    "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+  ];
+  const configuredActions = [...workflow.matchAll(/^\s*uses:\s*(\S+)\s*(?:#.*)?$/gmu)].map(
+    (match) => match[1],
+  );
+  if (JSON.stringify(configuredActions) !== JSON.stringify(actionPins)) {
+    fail(".github/workflows/ci.yml", "must use only the reviewed immutable action pins");
+  }
+  if (!/^permissions:\s*\n\s+contents:\s+read\s*$/mu.test(workflow)) {
+    fail(".github/workflows/ci.yml", "must grant only read access to repository contents");
+  }
+  if (!/^\s*run:\s+npm run check\s*$/mu.test(workflow)) {
+    fail(".github/workflows/ci.yml", "must execute the complete site checker");
+  }
+  if (/pull_request_target|\bsecrets\.|\bwrite-all\b|:\s*write\s*$/mu.test(workflow)) {
+    fail(".github/workflows/ci.yml", "must not use privileged events, secrets, or write permissions");
+  }
+} catch (error) {
+  fail(".github/workflows/ci.yml", `cannot be reviewed (${error.message})`);
 }
 
 const titles = new Map();
@@ -2040,6 +2069,6 @@ if (errors.length) {
   process.exitCode = 1;
 } else {
   console.log(
-    `Site checks passed: ${expectedPages.size} pages, ${faqItems.length} exact FAQs, shared official shell, accessible local interactions, legal safeguards, and ${totalAssetBytes.toLocaleString("en-US")} bytes of reviewed images.`,
+    `Site checks passed: ${expectedPages.size} pages, ${faqItems.length} exact FAQs, shared official shell, accessible local interactions, legal safeguards, read-only pinned CI, and ${totalAssetBytes.toLocaleString("en-US")} bytes of reviewed images.`,
   );
 }
