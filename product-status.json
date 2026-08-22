@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "veryloving.website.product-status.v1",
+  "statusVersion": "2026-08-22.draft.1",
+  "reviewedAt": "2026-08-22",
+  "releaseChannel": "draft",
+  "prototype": {
+    "label": "Product vision · software-only prototype 1.4",
+    "production": false,
+    "physicalHardwareConnected": false,
+    "automaticMonitoring": false,
+    "emergencyDispatch": false,
+    "externalEffectsEnabled": false
+  },
+  "commerce": {
+    "state": "paused_pending_approval",
+    "transactionsEnabled": false,
+    "checkoutUrls": [],
+    "message": "Pre-orders are paused while final product and purchase terms are reviewed."
+  },
+  "promotion": {
+    "state": "inactive",
+    "active": false,
+    "prizeAmountUsd": null,
+    "message": "No prize promotion is currently offered on this website."
+  }
+}

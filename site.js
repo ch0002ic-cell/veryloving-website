@@ -38,4 +38,56 @@
       if (!wasOpen) open(button);
     });
   }
+
+  const videoShell = document.querySelector("[data-video-shell]");
+  const videoButton = videoShell?.querySelector("[data-video-src]");
+  const videoStatus = videoShell?.querySelector("[data-video-status]");
+
+  if (videoShell && videoButton && videoStatus) {
+    videoButton.addEventListener("click", () => {
+      if (videoShell.classList.contains("is-loaded")) return;
+
+      let videoUrl;
+      try {
+        videoUrl = new URL(videoButton.dataset.videoSrc);
+      } catch {
+        videoStatus.textContent = "The video address is invalid and was not loaded.";
+        return;
+      }
+
+      if (
+        videoUrl.protocol !== "https:" ||
+        videoUrl.hostname !== "www.youtube-nocookie.com" ||
+        !videoUrl.pathname.startsWith("/embed/") ||
+        videoUrl.username ||
+        videoUrl.password
+      ) {
+        videoStatus.textContent = "The video address is not approved and was not loaded.";
+        return;
+      }
+
+      const frame = document.createElement("iframe");
+      frame.src = videoUrl.href;
+      frame.title = videoButton.dataset.videoTitle || "VeryLoving product-vision video";
+      frame.loading = "eager";
+      frame.referrerPolicy = "strict-origin-when-cross-origin";
+      frame.allow = "encrypted-media; picture-in-picture; fullscreen";
+      frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-presentation");
+      frame.setAttribute("allowfullscreen", "");
+      frame.tabIndex = 0;
+
+      videoButton.disabled = true;
+      videoStatus.textContent = "Loading the video from YouTube.";
+      videoShell.classList.add("is-loaded");
+      videoShell.append(frame);
+      frame.addEventListener(
+        "load",
+        () => {
+          videoStatus.textContent = "The YouTube video is loaded.";
+          frame.focus();
+        },
+        { once: true },
+      );
+    });
+  }
 })();

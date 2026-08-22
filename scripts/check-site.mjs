@@ -5,8 +5,6 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-const HOME_STRIPE_URL = "https://buy.stripe.com/8x2dR1duX7UD9MvcVo2kw02";
-const FAQ_STRIPE_URL = "https://buy.stripe.com/28E00b0Ib3En3o7aNg2kw00";
 const SUBSCRIBE_URL = "https://forms.gle/14Kyc8APdbFMVHSQ8";
 const YOUTUBE_EMBED_URL = "https://www.youtube-nocookie.com/embed/Ccb4uPe0yR0";
 const EMAIL_URL = "mailto:george@verylovinginc.com";
@@ -116,6 +114,7 @@ const expectedFiles = new Set([
   ...expectedAssets.keys(),
   ...expectedFonts.keys(),
   "package.json",
+  "product-status.json",
   "scripts/check-site.mjs",
   "product-pages.css",
   "site.js",
@@ -138,21 +137,32 @@ const homeImages = [
 ];
 
 const homeCopy = [
+  "Product vision · software-only prototype 1.4",
   "Bringing warmer companionship with VeryLoving",
   "More than jewelry, our vision brings warmth, connection, and peace of mind closer on every journey.",
+  "Pre-orders are paused while final product and purchase terms are reviewed.",
+  "Explore products",
   "Veryloving,Inc. is a Silicon Valley–based AI safety technology company dedicated to advancing personal safety, AI-powered emotional companionship, and next-generation wearable intelligence for a global market. Founded in 2025, the company began its global expansion in 2026.",
   "Our multidisciplinary team combines expertise in artificial intelligence, smart hardware engineering, and global connectivity to develop the next generation of the Wearable AI Guardian System—intended to support user-directed safety experiences while providing warmth, reassurance, and companionship in everyday life. Current prototypes do not provide automatic monitoring, emergency dispatch, or a guaranteed safety outcome.",
   "In 2026, Veryloving AI showcased its innovations at the Consumer Electronics Show (CES) and received recognition at BEYOND Expo for innovation, as well as a Silicon Valley wearable technology innovation award. The company also actively participates in global conversations on women's safety, AI, and emerging technologies.",
   "Our mission is simple: to make the world safer—and more compassionate.",
   "Connect to a caring voice",
   "Our product vision pairs a deliberate jewelry tap with a calming AI voice companion. In the current app, the user still chooses when to press Start and begin a supportive conversation.",
-  "Win $200 by following us on",
+  "Product vision; no physical-wearable or automatic safety action is available in this prototype.",
+  "Follow VeryLoving updates",
+  "No prize promotion is currently offered on this website.",
   "Wear peace of mind",
-  "A beautifully designed accessory that combines elegance and smart connectivity, bringing comfort and confidence to everyday life.",
+  "A beautifully designed accessory vision that combines elegance and thoughtful connectivity. Final materials, radio behavior, battery life, and durability still require physical-hardware validation.",
+  "Product vision · software-only prototype 1.4",
   "Trigger a loud alert",
   "The planned charm is designed to remain discreet and provide a loud local alert when deliberately activated, subject to final physical-hardware and acoustic validation.",
+  "Planned hardware behavior; not implemented by the software prototype.",
   "Share when you choose",
   "The VeryLoving app can prepare a fresh foreground location for the phone’s share sheet after the user requests it. The user selects the destination; opening the sheet does not prove delivery.",
+  "User-requested phone flow; not automatic monitoring or emergency delivery.",
+  "Watch the VeryLoving product-vision video",
+  "The video is hosted by YouTube. It will connect to YouTube only after you choose to load it.",
+  "Load video from YouTube",
 ];
 
 const faqItems = [
@@ -194,12 +204,12 @@ const faqItems = [
   {
     question: "Where do you ship the jewelry?",
     answer:
-      "Pre-orders are currently offered for the United States. Final shipping coverage, eligibility, timing, taxes, returns, and support terms will be shown in the approved purchase terms.",
+      "Pre-orders are paused while final product and purchase terms are reviewed. If sales open later, approved terms will state shipping coverage, eligibility, timing, taxes, returns, and support.",
   },
   {
     question: "When can I buy it?",
     answer:
-      "You can pre-order it now. Delivery timing, final specifications, and purchase terms remain subject to confirmation; an estimate is not a guaranteed ship date.",
+      "Pre-orders are paused while final specifications, delivery timing, price, returns, warranty, and other purchase terms are reviewed. This website is not currently accepting a product transaction.",
   },
   {
     question: "Who can I reach out to with more questions?",
@@ -367,14 +377,7 @@ function normalizedElement(source, tagName, className) {
 function normalizedHeader(source) {
   const header = normalizedElement(source, "header", "site-header");
   if (!header) return null;
-  return header
-    .replace(
-      /<a\b(?=[^>]*\bclass\s*=\s*(["'])[^"']*\bheader-preorder\b[^"']*\1)[^>]*>[\s\S]*?<\/a>/giu,
-      "",
-    )
-    .replace(/>\s+</gu, "><")
-    .replace(/\s+/gu, " ")
-    .trim();
+  return header.replace(/>\s+</gu, "><").replace(/\s+/gu, " ").trim();
 }
 
 function valuesFor(source, tagName, attributeName) {
@@ -472,6 +475,49 @@ for (const page of expectedPages.keys()) {
   } catch (error) {
     fail(page, `cannot be read (${error.message})`);
   }
+}
+
+const expectedProductStatus = {
+  schemaVersion: "veryloving.website.product-status.v1",
+  statusVersion: "2026-08-22.draft.1",
+  reviewedAt: "2026-08-22",
+  releaseChannel: "draft",
+  prototype: {
+    label: "Product vision · software-only prototype 1.4",
+    production: false,
+    physicalHardwareConnected: false,
+    automaticMonitoring: false,
+    emergencyDispatch: false,
+    externalEffectsEnabled: false,
+  },
+  commerce: {
+    state: "paused_pending_approval",
+    transactionsEnabled: false,
+    checkoutUrls: [],
+    message:
+      "Pre-orders are paused while final product and purchase terms are reviewed.",
+  },
+  promotion: {
+    state: "inactive",
+    active: false,
+    prizeAmountUsd: null,
+    message: "No prize promotion is currently offered on this website.",
+  },
+};
+
+let productStatus = null;
+try {
+  productStatus = JSON.parse(
+    await readFile(path.join(root, "product-status.json"), "utf8"),
+  );
+  if (JSON.stringify(productStatus) !== JSON.stringify(expectedProductStatus)) {
+    fail(
+      "product-status.json",
+      "must exactly match the reviewed draft capability, commerce, and promotion boundary",
+    );
+  }
+} catch (error) {
+  fail("product-status.json", `must be valid reviewed JSON (${error.message})`);
 }
 
 try {
@@ -572,21 +618,21 @@ for (const [page, canonical] of expectedPages) {
 
   const scriptTags = tags(source, "script");
   const scriptElements = pairedElements(source, "script");
-  const needsAccordionScript = page === "faq.html";
+  const needsSiteScript = page === "faq.html" || page === "index.html";
   if (
-    scriptTags.length !== (needsAccordionScript ? 1 : 0) ||
-    scriptElements.length !== (needsAccordionScript ? 1 : 0)
+    scriptTags.length !== (needsSiteScript ? 1 : 0) ||
+    scriptElements.length !== (needsSiteScript ? 1 : 0)
   ) {
     fail(
       page,
-      needsAccordionScript
-        ? "FAQ must load exactly one script"
-        : "pages without FAQ controls must not load JavaScript",
+      needsSiteScript
+        ? "Home and FAQ must load exactly one reviewed local script"
+        : "other pages must not load JavaScript",
     );
-  } else if (needsAccordionScript) {
+  } else if (needsSiteScript) {
     const scriptAttrs = attributes(scriptTags[0]);
     if (scriptAttrs.get("src") !== "site.js" || !scriptAttrs.has("defer")) {
-      fail(page, "FAQ must load only the local site.js with the defer attribute");
+      fail(page, "must load only the local site.js with the defer attribute");
     }
     if (scriptElements[0].body.trim()) fail(page, "must not contain inline script code");
   }
@@ -638,7 +684,7 @@ for (const [page, canonical] of expectedPages) {
 
   if (header) {
     const headerLinks = valuesFor(header, "a", "href");
-    for (const required of ["index.html", "faq.html"]) {
+    for (const required of ["index.html", "products.html", "faq.html"]) {
       if (!headerLinks.includes(required)) fail(page, `shared header must link to ${required}`);
     }
     const headerImages = valuesFor(header, "img", "src");
@@ -649,17 +695,14 @@ for (const [page, canonical] of expectedPages) {
 
   const rawHeader = normalizedElement(source, "header", "site-header");
   if (rawHeader) {
-    const checkoutLinks = valuesFor(rawHeader, "a", "href").filter((href) =>
-      href.startsWith("https://buy.stripe.com/"),
-    );
+    const primaryNavs = elementsWithClass(rawHeader, "nav", "primary-nav");
+    const primaryLinks = valuesFor(primaryNavs[0]?.markup ?? "", "a", "href");
     if (
-      page === "index.html" &&
-      (checkoutLinks.length !== 1 || checkoutLinks[0] !== HOME_STRIPE_URL)
+      primaryNavs.length !== 1 ||
+      JSON.stringify(primaryLinks) !==
+        JSON.stringify(["products.html", "faq.html"])
     ) {
-      fail(page, `official Home header checkout must use ${HOME_STRIPE_URL}`);
-    }
-    if (page !== "index.html" && checkoutLinks.length) {
-      fail(page, "only Home may show the responsive header checkout control");
+      fail(page, "shared primary navigation must link to Products and FAQ in order");
     }
   }
 
@@ -813,24 +856,20 @@ for (const [page, canonical] of expectedPages) {
     }
   }
 
-  const iframeTags = tags(source, "iframe");
+  if (tags(source, "iframe").length) {
+    fail(page, "shipped HTML must not contact an embedded third party before user action");
+  }
+
+  const videoShells = elementsWithClass(source, "div", "video-consent");
   if (page === "index.html") {
-    if (iframeTags.length !== 1) {
-      fail(page, "must contain exactly one privacy-enhanced YouTube embed");
-    } else {
-      const iframe = attributes(iframeTags[0]);
-      if (iframe.get("src") !== YOUTUBE_EMBED_URL) {
-        fail(page, `embedded product video must use ${YOUTUBE_EMBED_URL}`);
-      }
-      if (!(iframe.get("title") ?? "").trim()) fail(page, "video iframe must have a title");
-      if (iframe.get("loading") !== "lazy") fail(page, "video iframe must lazy-load");
-      if (!iframe.has("allowfullscreen")) fail(page, "video iframe must allow fullscreen");
-      if (iframe.get("referrerpolicy") !== "strict-origin-when-cross-origin") {
-        fail(page, "video iframe must use a strict-origin-when-cross-origin referrer policy");
-      }
+    if (
+      videoShells.length !== 1 ||
+      !videoShells[0].attrs.has("data-video-shell")
+    ) {
+      fail(page, "must contain one explicit video-consent container");
     }
-  } else if (iframeTags.length) {
-    fail(page, "only Home may contain the reviewed YouTube embed");
+  } else if (videoShells.length || /\bdata-video-(?:shell|src|status|title)\b/iu.test(source)) {
+    fail(page, "only Home may contain the reviewed user-requested video loader");
   }
 }
 
@@ -874,10 +913,11 @@ checkOrderedCopy("index.html", homeText, homeCopy);
 const homeH2 = pairedElements(home, "h2").map((element) => normalizedText(element.body));
 const expectedHomeH2 = [
   "Connect to a caring voice",
-  "Win $200 by following us on",
+  "Follow VeryLoving updates",
   "Wear peace of mind",
   "Trigger a loud alert",
   "Share when you choose",
+  "Watch the VeryLoving product-vision video",
   "Be the 1st guardian angel to make our world veryloving",
 ];
 if (JSON.stringify(homeH2) !== JSON.stringify(expectedHomeH2)) {
@@ -888,14 +928,69 @@ const homeImageSources = valuesFor(home, "img", "src");
 if (JSON.stringify(homeImageSources) !== JSON.stringify(homeImages)) {
   fail("index.html", "images must match the complete ordered official Home asset suite");
 }
-const homeStripeLinks = valuesFor(home, "a", "href").filter((href) =>
-  href.startsWith("https://buy.stripe.com/"),
-);
-if (homeStripeLinks.length !== 7 || homeStripeLinks.some((href) => href !== HOME_STRIPE_URL)) {
-  fail(
-    "index.html",
-    `all seven official Home checkout controls must use ${HOME_STRIPE_URL}`,
-  );
+const homeExplorePills = elementsWithClass(home, "a", "home-explore-pill");
+if (
+  homeExplorePills.length !== 1 ||
+  homeExplorePills[0].attrs.get("href") !== "products.html" ||
+  normalizedText(homeExplorePills[0].body) !== "Explore products"
+) {
+  fail("index.html", "must contain one responsive Explore products link to the product family page");
+}
+const homePurchaseStatuses = elementsWithClass(home, "p", "home-purchase-status");
+if (
+  homePurchaseStatuses.length !== 1 ||
+  homePurchaseStatuses[0].attrs.has("role") ||
+  (productStatus &&
+    normalizedText(homePurchaseStatuses[0].body) !== productStatus.commerce.message)
+) {
+  fail("index.html", "must show paused commerce as static adjacent copy, not a live-region notification");
+}
+if (valuesFor(home, "a", "href").some((href) => href.startsWith("https://buy.stripe.com/"))) {
+  fail("index.html", "must not offer checkout while purchase terms remain unapproved");
+}
+for (const staleClass of ["header-preorder", "preorder-dock", "feature-preorder"]) {
+  if (new RegExp(`\\b${staleClass}\\b`, "u").test(home)) {
+    fail("index.html", `must not retain the paused-commerce control ${staleClass}`);
+  }
+}
+if (homeText.includes("Win $200")) {
+  fail("index.html", "must not advertise an inactive prize promotion");
+}
+if (productStatus) {
+  for (const requiredStatus of [
+    productStatus.prototype.label,
+    productStatus.commerce.message,
+    productStatus.promotion.message,
+  ]) {
+    if (!homeText.includes(requiredStatus)) {
+      fail("index.html", `must surface reviewed status copy ${JSON.stringify(requiredStatus)}`);
+    }
+  }
+}
+
+const homeVideoShells = elementsWithClass(home, "div", "video-consent");
+const homeVideoButtons = elementsWithClass(home, "button", "video-load-button");
+const homeVideoStatuses = elementsWithClass(home, "p", "video-load-status");
+if (homeVideoShells.length !== 1 || homeVideoButtons.length !== 1 || homeVideoStatuses.length !== 1) {
+  fail("index.html", "must contain one complete explicit-consent video loader");
+} else {
+  const buttonAttrs = homeVideoButtons[0].attrs;
+  const statusAttrs = homeVideoStatuses[0].attrs;
+  if (
+    buttonAttrs.get("type") !== "button" ||
+    buttonAttrs.get("data-video-src") !== YOUTUBE_EMBED_URL ||
+    !(buttonAttrs.get("data-video-title") ?? "").trim() ||
+    buttonAttrs.get("aria-describedby") !== "video-privacy-note"
+  ) {
+    fail("index.html", "video loader button must expose the reviewed URL, title, type, and description");
+  }
+  if (
+    !statusAttrs.has("data-video-status") ||
+    statusAttrs.get("role") !== "status" ||
+    statusAttrs.get("aria-live") !== "polite"
+  ) {
+    fail("index.html", "video loader must provide a polite live status region");
+  }
 }
 const homeLinks = valuesFor(home, "a", "href");
 for (const required of [
@@ -993,11 +1088,8 @@ for (let index = 0; index < faqItems.length; index += 1) {
   }
 }
 
-const faqStripeLinks = valuesFor(faq, "a", "href").filter((href) =>
-  href.startsWith("https://buy.stripe.com/"),
-);
-if (faqStripeLinks.length !== 1 || faqStripeLinks[0] !== FAQ_STRIPE_URL) {
-  fail("faq.html", `must contain one FAQ preorder link to ${FAQ_STRIPE_URL}`);
+if (valuesFor(faq, "a", "href").some((href) => href.startsWith("https://buy.stripe.com/"))) {
+  fail("faq.html", "must not offer checkout while purchase terms remain unapproved");
 }
 if (!valuesFor(faq, "a", "href").includes(EMAIL_URL)) {
   fail("faq.html", `must link the contact answer to ${EMAIL_URL}`);
@@ -1353,11 +1445,21 @@ const wearablePage = pages.get("wearable.html") ?? "";
 const wearableCheckoutLinks = valuesFor(wearablePage, "a", "href").filter((href) =>
   href.startsWith("https://buy.stripe.com/"),
 );
+if (wearableCheckoutLinks.length) {
+  fail("wearable.html", "must not offer checkout while purchase terms remain unapproved");
+}
+const wearableCommerceStatuses = elementsWithClass(
+  wearablePage,
+  "p",
+  "product-commerce-status",
+);
 if (
-  wearableCheckoutLinks.length !== 1 ||
-  wearableCheckoutLinks.some((href) => href !== HOME_STRIPE_URL)
+  wearableCommerceStatuses.length !== 1 ||
+  wearableCommerceStatuses[0].attrs.has("role") ||
+  (productStatus &&
+    normalizedText(wearableCommerceStatuses[0].body) !== productStatus.commerce.message)
 ) {
-  fail("wearable.html", `the wearable checkout control must use ${HOME_STRIPE_URL}`);
+  fail("wearable.html", "must show paused commerce as static adjacent copy, not a live-region notification");
 }
 
 const appDownloadButtons = pairedElements(wearablePage, "button").filter((button) =>
@@ -1450,6 +1552,12 @@ for (const requiredCopy of [
 }
 
 const siteText = shippedHtml.join("\n");
+if (/https:\/\/buy\.stripe\.com\//iu.test(siteText)) {
+  fail("site", "must not ship an active Stripe checkout while purchase terms remain unapproved");
+}
+if (/\bWin\s+\$200\b/iu.test(siteText)) {
+  fail("site", "must not ship the inactive prize-promotion claim");
+}
 const residuePatterns = [
   [/_api\//iu, "captured API path"],
   [/access[-_]?tokens?/iu, "access-token residue"],
@@ -1488,7 +1596,7 @@ for (const required of [
   "does not implement physiological heart-rate or heartbeat sensing",
   "Operating-system share sheet",
   "A material limitation must not be hidden solely in a legal document",
-  "GitHub Pages, Google Forms, YouTube, Stripe",
+  "GitHub Pages, Google Forms, YouTube, and linked social services",
   "developer connects both same-computer simulators and presses its request control",
   "marks a rehearsal completed only when both local intents report executed",
   "Unknown, failed, expired, cancelled, or inconsistent evidence is not treated as success",
@@ -1515,6 +1623,9 @@ for (const required of [
   "The timeline clears when either simulator disconnects or the lab is backgrounded or left.",
   "The separate mobile rehearsal timeline is limited to 32 redacted in-memory entries",
   "software-only prototype 1.4 boundary work",
+  "The product video does not connect to YouTube until the visitor selects Load video from YouTube.",
+  "no active Stripe checkout link",
+  "Stripe remains a possible future checkout provider",
 ]) {
   if (!privacyText.includes(required)) {
     fail("privacy.html", `must preserve reviewed release boundary: ${required}`);
@@ -1566,6 +1677,8 @@ for (const required of [
   "a separate timeline of at most 32 redacted entries in app process memory",
   "production-gate review modes remain local simulation and reject semantic work",
   "These candidate Terms do not establish a final product specification",
+  "Pre-orders are paused, and this website build has no active checkout link.",
+  "No prize promotion is currently offered on this website.",
   "Any sweepstakes, contest, or giveaway must have separately reviewed official rules",
   "No arbitration provision, class-action waiver, governing-law clause",
   "Privacy Notice",
@@ -1774,6 +1887,16 @@ for (const [pattern, requirement] of [
     /for\s*\([^)]*\bbuttons\b[^)]*\)\s*close\s*\(/u,
     "close sibling accordion items before opening a new one",
   ],
+  [/data-video-shell/u, "scope the user-requested video loader"],
+  [/data-video-src/u, "read the reviewed video source from markup"],
+  [/document\.createElement\s*\(\s*(["'])iframe\1\s*\)/u, "create the video iframe only after activation"],
+  [/hostname\s*!==\s*(["'])www\.youtube-nocookie\.com\1/u, "allow only the privacy-enhanced YouTube host"],
+  [/pathname\.startsWith\s*\(\s*(["'])\/embed\/\1\s*\)/u, "allow only a YouTube embed path"],
+  [/videoUrl\.username\s*\|\|\s*videoUrl\.password/u, "reject credentials in the video URL"],
+  [/referrerPolicy\s*=\s*(["'])strict-origin-when-cross-origin\1/u, "set a reviewed video referrer policy"],
+  [/setAttribute\s*\(\s*(["'])sandbox\1\s*,\s*(["'])allow-scripts allow-same-origin allow-presentation\2\s*\)/u, "sandbox the loaded video frame"],
+  [/videoButton\.disabled\s*=\s*true/u, "prevent repeat video activation"],
+  [/frame\.focus\s*\(\s*\)/u, "move keyboard focus to the loaded player"],
 ]) {
   if (!pattern.test(siteJs)) fail("site.js", `must ${requirement}`);
 }
@@ -1812,6 +1935,13 @@ for (const selector of [
   ".faq-question",
   ".faq-panel",
   ".is-open",
+  ".home-status-line",
+  ".home-purchase-status",
+  ".home-explore-pill",
+  ".feature-status",
+  ".social-status",
+  ".video-consent",
+  ".video-load-button",
 ]) {
   if (!css.includes(selector)) fail("styles.css", `must define ${selector}`);
 }
@@ -1825,7 +1955,7 @@ if (!/@media\s*\([^)]*(?:min-width|max-width)\s*:\s*1000px[^)]*\)/iu.test(css)) 
   fail("styles.css", "must include the official 1000px tablet breakpoint");
 }
 for (const [pattern, requirement] of [
-  [/\.home-hero\s*\{[^}]*height\s*:\s*146\.735vw/isu, "scale the phone hero fluidly"],
+  [/\.home-hero\s*\{[^}]*height\s*:\s*max\(154vw,\s*600px\)/isu, "provide room for truthful status copy in the phone hero"],
   [/\.hero-products\s*\{[^}]*pointer-events\s*:\s*none/isu, "keep decorative hero artwork from blocking the Follow link"],
   [/\.feature-connect\s*\{[^}]*height\s*:\s*180\.1vw/isu, "scale phone feature sections fluidly"],
   [/\.how-it-works\s*\{[^}]*height\s*:\s*max\(80\.273vw,\s*47\.77vh\)/isu, "preserve the official responsive How-it-works stage"],
@@ -1833,7 +1963,7 @@ for (const [pattern, requirement] of [
   [/\.how-it-works\s*\{[^}]*height\s*:\s*max\(634\.1875px,\s*calc\(533\.008px\s*\+\s*7\.90516vw\),\s*45\.1594vw\)[^}]*overflow\s*:\s*visible/isu, "keep the desktop How-it-works artwork aligned and unclipped"],
   [/\.how-it-works\s+img\s*\{[^}]*position\s*:\s*relative/isu, "paint overflowing How-it-works artwork above the following cream section"],
   [/@media\s*\([^)]*min-width\s*:\s*1001px[^)]*\)\s*and\s*\([^)]*max-width\s*:\s*1439px[^)]*\)[^{]*\{[\s\S]*?\.home-hero\s*\{[^}]*width\s*:\s*78\.125vw[\s\S]*?\.hero-charm\s*\{[^}]*left\s*:\s*55\.317361vw[^}]*width\s*:\s*28\.271528vw/iu, "keep the intermediate desktop hero inside the viewport"],
-  [/\.primary-nav\s*\{[^}]*margin-right\s*:\s*min\(175px,\s*calc\(\(1535px\s*-\s*100vw\)\s*\/\s*2\)\)/isu, "keep FAQ clear of the preorder control on intermediate desktops"],
+  [/\.primary-nav\s*>\s*a\s*\{[^}]*min-height\s*:\s*44px/isu, "keep shared navigation targets at least 44px tall"],
   [/\.feature-copy\s*\{[^}]*min-width\s*:\s*0/isu, "allow intermediate desktop feature copy to shrink inside its grid track"],
   [/\.social-giveaway\s*\{[^}]*height\s*:\s*40\.465vh/isu, "preserve the official responsive social stage"],
   [/\.faq-list\s*\{[^}]*width\s*:\s*85\.277vw/isu, "keep the phone FAQ list fluid"],
@@ -1844,7 +1974,12 @@ for (const [pattern, requirement] of [
   [/\.faq-panel-featured\s*>\s*div\s*\{[^}]*min-height\s*:\s*0/isu, "let the featured FAQ grid row collapse before it animates"],
   [/\.faq-panel-featured\s+p\s*\{[^}]*min-height\s*:\s*240px/isu, "preserve the official featured FAQ open height"],
   [/box-shadow\s*:\s*0\s+0\s+0\s+3px\s+#fff/iu, "use a two-tone keyboard focus indicator"],
-  [/@media\s*\([^)]*min-width\s*:\s*1001px[^)]*\)\s*and\s*\([^)]*max-height\s*:\s*850px[^)]*\)[^{]*\{[\s\S]*?\.home-page\s+\.header-preorder\s*\{[^}]*position\s*:\s*absolute[\s\S]*?\.home-page\s+\.preorder-dock\s*\{[^}]*position\s*:\s*relative/iu, "keep preorder controls in flow on short desktop viewports"],
+  [/\.video-consent\s*\{[^}]*width\s*:\s*min\(760px,\s*calc\(100%\s*-\s*48px\)\)[^}]*text-align\s*:\s*center/isu, "present the video privacy choice as a contained stage"],
+  [/\.video-load-button\s*\{[^}]*min-width\s*:\s*260px[^}]*cursor\s*:\s*pointer/isu, "provide an explicit and usable video-load control"],
+  [/\.video-consent\.is-loaded\s+iframe\s*\{[^}]*width\s*:\s*100%[^}]*aspect-ratio\s*:\s*16\s*\/\s*9[^}]*border\s*:\s*0/isu, "size the user-loaded player responsively"],
+  [/@media\s*\([^)]*max-width\s*:\s*750px[^)]*\)[^{]*\{[\s\S]*?\.video-load-button\s*\{[^}]*width\s*:\s*100%[^}]*min-width\s*:\s*0/iu, "keep the video-load control usable on phones"],
+  [/\.home-explore-pill\s*\{[^}]*width\s*:\s*auto[^}]*min-width\s*:\s*190px[^}]*padding\s*:\s*0\s+24px[^}]*white-space\s*:\s*nowrap/isu, "keep the longer Home product CTA on one padded line"],
+  [/@media\s*\([^)]*max-width\s*:\s*750px[^)]*\)[^{]*\{[\s\S]*?\.hero-copy\s+\.home-explore-pill\s*\{[^}]*width\s*:\s*auto[^}]*min-width\s*:\s*176px[^}]*min-height\s*:\s*44px[^}]*padding\s*:\s*0\s+20px/iu, "keep the Home product CTA readable and touch-sized on phones"],
 ]) {
   if (!pattern.test(css)) fail("styles.css", `must ${requirement}`);
 }
@@ -1892,6 +2027,7 @@ for (const selector of [
   ".product-hero",
   ".product-hero-media",
   ".product-status-line",
+  ".product-commerce-status",
   ".product-feature",
   ".product-feature-media",
   ".product-rule-list",
@@ -1919,6 +2055,7 @@ for (const [pattern, requirement] of [
   [/\.app-download-button\s*\{[^}]*min-width\s*:\s*210px[^}]*min-height\s*:\s*58px[^}]*background\s*:\s*var\(--yellow\)/isu, "style honest coming-soon app controls with the official pill language"],
   [/\.product-page\s+main\s*\{[^}]*--product-button-ink\s*:\s*#4d2f1d/isu, "define a readable product CTA ink"],
   [/\.product-page\s+main\s+\.pill-coral\s*\{[^}]*color\s*:\s*var\(--product-button-ink\)/isu, "keep coral product CTA text at accessible contrast"],
+  [/\.product-commerce-status\s*\{[^}]*border\s*:\s*1px\s+solid[^}]*font-size\s*:\s*14px[^}]*font-weight\s*:\s*600/isu, "style paused-commerce status as adjacent readable information"],
   [/\.feature-copy:not\(\.feature-copy-dark\)\s+\.product-feature-pill\s*\{[^}]*color\s*:\s*var\(--product-button-ink\)/isu, "keep coral split-feature CTA text at accessible contrast"],
   [/\.home-companion-page\s+\.product-boundary-list\s*>\s*p\s*\{[^}]*display\s*:\s*grid[^}]*grid-template-columns\s*:\s*168px\s+minmax\(0,\s*1fr\)[^}]*align-items\s*:\s*start[^}]*gap\s*:\s*28px/isu, "align the Home Companion trust rows to one label and detail grid"],
   [/\.product-rule-list\s*\{[^}]*width\s*:\s*756\.66px/isu, "reuse the official desktop FAQ measure for ruled information"],
@@ -2086,6 +2223,6 @@ if (errors.length) {
   process.exitCode = 1;
 } else {
   console.log(
-    `Site checks passed: ${expectedPages.size} pages, ${faqItems.length} exact FAQs, shared official shell, accessible local interactions, legal safeguards, read-only pinned CI, and ${totalAssetBytes.toLocaleString("en-US")} bytes of reviewed images.`,
+    `Site checks passed: ${expectedPages.size} pages, ${faqItems.length} exact FAQs, manifest-bound product status, paused commerce and promotion, explicit third-party video consent, accessible local interactions, shared official shell, legal safeguards, read-only pinned CI, and ${totalAssetBytes.toLocaleString("en-US")} bytes of reviewed images.`,
   );
 }

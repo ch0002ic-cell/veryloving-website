@@ -107,6 +107,19 @@
   gap: 12px 24px;
 }
 
+.product-commerce-status {
+  max-width: 390px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid rgb(84 54 32 / 30%);
+  border-radius: 8px;
+  background: rgb(248 229 183 / 45%);
+  color: var(--brown-dark);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
 .product-pill {
   position: static;
   width: auto;
