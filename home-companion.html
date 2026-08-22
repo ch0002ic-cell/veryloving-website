@@ -37,7 +37,7 @@
           <nav class="product-breadcrumb" aria-label="Breadcrumb">
             <a href="products.html">Products</a><span aria-hidden="true">/</span><span aria-current="page">Home Companion</span>
           </nav>
-          <p class="product-status-line">Future vision + local software prototype</p>
+          <p class="product-status-line">Future vision + software-only prototype 1.3</p>
           <h1 id="home-companion-title">Bringing warmer companionship home</h1>
           <p class="product-lede">
             A thoughtful vision for comfort and connection at home, now supported
@@ -72,6 +72,12 @@
             is a loopback-only, process-memory simulator—not a physical robot or a
             production service.
           </p>
+          <p>
+            Prototype 1.3 is an internal software-contract milestone, not an app
+            release or product version. It adds automated checks, limited event
+            history, and explicit stop results to this same no-capture simulator;
+            it does not add a physical product or production service.
+          </p>
         </div>
       </section>
 
@@ -87,9 +93,9 @@
             <p>
               A developer explicitly starts the rehearsal from the mobile app after
               both localhost endpoints are connected. Home Companion accepts only
-              the closed gentle-check-in payload. Its correlation identifier follows
-              the local intent, no-capture session, receipts, and events; a wearable
-              has no direct authority over the Home endpoint.
+              the closed gentle-check-in payload. One generated reference value links
+              the local request, no-capture session, status records, and events; a
+              wearable has no direct authority over the Home endpoint.
             </p>
           </div>
         </section>
@@ -119,12 +125,19 @@
             <p class="product-status-line">Receipts without assumptions</p>
             <h2 id="connection-title">Evidence stays precise</h2>
             <p>
-              Each explicit advance creates one synthetic receipt, keeping
-              transport acknowledgement, acceptance, execution, and terminal
-              evidence distinct. The mobile app reports each endpoint's outcome and
+              Each explicit advance creates one synthetic status record, keeping
+              the request, transport acknowledgement, acceptance, execution, and
+              final result distinct. The mobile app reports each endpoint's outcome and
               treats the rehearsal as completed only after both report executed and
-              it explicitly ends the correlated Home session. A lost terminal receipt
-              becomes unknown—not success.
+              it explicitly ends the linked Home session. If the final result record
+              is missing, the app reports unknown—not success.
+            </p>
+            <p>
+              Machine-readable rules automatically check emitted examples. A
+              bounded, cursor-based trace—a limited event history with a marker for
+              where to continue—reveals only approved status fields and says when
+              older records have been omitted. It excludes payloads, secrets, device
+              details, contact information, location, and audio.
             </p>
           </div>
         </section>
@@ -140,8 +153,8 @@
           <div class="product-boundary-list" role="list">
             <p role="listitem"><strong>Explicit control.</strong><span>The mobile developer starts one correlated rehearsal, manually refreshes its evidence, and explicitly advances or ends its synthetic session.</span></p>
             <p role="listitem"><strong>No capture.</strong><span>No camera, microphone capture, audio provider, conversation, monitoring, notification, or location flow is involved.</span></p>
-            <p role="listitem"><strong>Local readiness.</strong><span>Ready, busy, or blocked describes only the process-memory harness—not a person, home, robot, or production system.</span></p>
-            <p role="listitem"><strong>Fail closed.</strong><span>Privacy or availability faults, lease reconciliation, rebind, and reset end or block work without silently resuming it.</span></p>
+            <p role="listitem"><strong>Local readiness.</strong><span>Ready, busy, or blocked describes only the local in-memory test harness—not a person, home, robot, or production system.</span></p>
+            <p role="listitem"><strong>Fail closed.</strong><span>An explicit coordinated stop can cancel pending work, end an active session, or report already stopped, too late, or unknown. None of these outcomes controls a person, home, or physical device.</span></p>
           </div>
         </div>
       </section>

@@ -35,7 +35,7 @@
       <section class="product-hero" aria-labelledby="products-title">
         <div class="product-hero-copy">
           <nav class="product-breadcrumb" aria-label="Breadcrumb"><span aria-current="page">Products</span></nav>
-          <p class="product-status-line">Product vision + current prototype</p>
+          <p class="product-status-line">Product vision + software-only prototype 1.3</p>
           <h1 id="products-title">Choose your VeryLoving experience</h1>
           <p class="product-lede">
             Discover how the mobile app, NorthStar wearable vision, and future
@@ -70,6 +70,15 @@
             explicitly asks the iOS or Android app to record one synthetic check-in
             cue with two same-computer simulators. It does not connect physical
             jewelry or a robot, monitor anyone, or create an external effect.
+          </p>
+          <p>
+            Prototype 1.3 is an internal software-contract milestone, not an app
+            release or product version. It adds size and format checks to selected
+            mobile data paths and clearer replay, cancellation, trace, and stop
+            evidence across the simulators—that is, prior retry results,
+            cancellation results, limited event history, and stop results.
+            This strengthens engineering review; it does not add delivery,
+            monitoring, AI safety decisions, or production readiness.
           </p>
         </div>
       </section>
@@ -137,23 +146,23 @@
         <div class="product-rule-list" role="list">
           <article class="product-rule-row" role="listitem">
             <h3>NorthStar wearable</h3>
-            <p>A connected-jewelry vision; current continuity behavior is software simulation only.</p>
+            <p>A connected-jewelry vision; the current software simulator keeps a limited history of state changes, repeated requests, and cancellation results. It does not represent a physical wearable.</p>
           </article>
           <article class="product-rule-row" role="listitem">
             <h3>VeryLoving mobile app</h3>
-            <p>Cross-platform experiences for supportive conversation, user-directed sharing, and an explicit developer-only rehearsal on iOS and Android simulators.</p>
+            <p>Cross-platform experiences for supportive conversation, user-directed sharing, and an explicit developer-only rehearsal. Selected live-voice frames, route responses, and queued Bluetooth observations are checked for size and expected format before the app uses them.</p>
           </article>
           <article class="product-rule-row" role="listitem">
             <h3>Home Companion</h3>
-            <p>A future product vision with a current no-capture, effect-free localhost contract prototype.</p>
+            <p>A future product vision with a current no-capture, effect-free localhost contract prototype. Automated format checks cover emitted examples, its limited status history says when older records were omitted, and stop results remain explicit.</p>
           </article>
           <article class="product-rule-row" role="listitem">
             <h3>Coordinated rehearsal</h3>
-            <p>One correlation value connects the two local records. The app shows each endpoint separately and says completed only after both reach executed and the developer explicitly ends the matching Home session.</p>
+            <p>One generated reference value links the two local records. The app shows each endpoint separately and says completed only after both reach executed and the developer explicitly ends the matching Home session.</p>
           </article>
           <article class="product-rule-row" role="listitem">
             <h3>Evidence review</h3>
-            <p>A developer can manually refresh and reconcile the simulators. Unknown, failed, expired, cancelled, or inconsistent evidence is never shown as success.</p>
+            <p>A developer can manually refresh and compare the limited simulator records. Unknown, failed, expired, cancelled, too late, missing, or inconsistent results are never shown as success.</p>
           </article>
           <article class="product-rule-row" role="listitem">
             <h3>Production path</h3>

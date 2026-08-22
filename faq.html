@@ -207,10 +207,12 @@
               <p>
                 Accidental-activation safeguards and cancellation behavior remain
                 part of production hardware and human-factors design. In the current
-                simulator, a developer can recover from an interrupted synthetic
-                wearable request only by explicitly expiring it with a lab control;
-                that is test tooling, not a consumer cancellation feature. It produces no alert, message,
-                location share, vibration, or emergency action.
+                simulator, a developer can attempt to cancel a still-pending synthetic
+                wearable request before its final processing boundary. Only a confirmed
+                cancelled result counts; too late, missing evidence, and unknown do not.
+                Explicit lab expiry is a fallback for a stuck, unfinished fixture, not
+                cancellation success. These are test controls, not a consumer feature,
+                and they produce no alert, message, location share, vibration, or emergency action.
               </p>
             </div>
           </div>

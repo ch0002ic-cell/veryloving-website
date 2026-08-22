@@ -66,13 +66,11 @@
           </p>
 
           <p>
-            <strong>Reviewed source baselines:</strong>
-            mobile <code>de5e213fb9b82c2cd579cb9442ab59524997b916</code>,
-            wearable <code>019d8f5ef9efa1f3f8402b92d6e1822af6e6a7bc</code>,
-            and Home Companion
-            <code>8d36fe20bb970907c79f5b8adbd67fc753f04850</code>.
-            These engineering identifiers are not app versions or release
-            approvals; any source or deployment change requires a new review.
+            <strong>Reviewed source scope:</strong> the current draft mobile,
+            wearable-simulator, and Home Companion simulator implementations,
+            including the software-only prototype 1.3 boundary work described
+            below. This scope is not an app version or release approval; any
+            source or deployment change requires a new review.
           </p>
 
           <h2>1. Emergency and safety warning</h2>
@@ -235,23 +233,32 @@
             person, or physical device was reached.
           </p>
           <p>
-            A developer may manually refresh and reconcile local evidence or recover
-            from an interrupted wearable fixture by explicitly expiring it with a
-            lab control. A wearable
-            reset retains bounded duplicate-request tombstones until explicit rebind,
-            and readiness distinguishes a new admission from a known retry. These
-            are developer test controls, not consumer cancellation, delivery, or
-            emergency features.
+            A developer may manually refresh and reconcile local evidence and may
+            attempt to cancel a still-pending wearable fixture before its final
+            processing boundary. Only confirmed cancelled evidence counts as
+            cancellation; too late, missing evidence, and unknown remain unresolved.
+            Explicit lab expiry is a fallback for a stuck, unfinished fixture, not
+            cancellation success. The wearable simulator keeps a limited history of
+            prior results, distinguishes a new admission from a known retry, and
+            rejects conflicting reuse. Its synthetic ownership and reboot fixtures are not physical
+            identity, provisioning, secure ownership, durable storage, or hardware
+            behavior. A local reset retains bounded duplicate-request tombstones
+            until explicit rebind. These are developer test controls, not consumer
+            cancellation, delivery, or emergency features.
           </p>
           <p>
             The Home Companion rehearsal requires no capture, exposes no camera,
             does not access a browser microphone, and permits no microphone
             capture. It connects no physical robot, accepts no direct wearable
             authority, makes no outbound request, and persists no session after
-            process exit. Privacy or availability faults, rebind, reset, and lease
-            reconciliation fail closed. The production-gate review modes remain
-            local simulation and reject semantic work; they are not production or
-            staging services.
+            process exit. Closed machine-readable schemas check emitted examples,
+            and its bounded trace exposes only allowlisted status evidence with
+            continuation and omitted-record information. An explicit coordinated stop may
+            cancel pending work, end an active session, or report already stopped,
+            too late, or unknown. Privacy or availability faults, rebind, reset,
+            and lease reconciliation fail closed. The production-gate review modes
+            remain local simulation and reject semantic work; they are not
+            production or staging services.
           </p>
           <p>
             Physical hardware, firmware, cellular service, manufacturing,

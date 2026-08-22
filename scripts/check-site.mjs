@@ -183,7 +183,7 @@ const faqItems = [
   {
     question: "What happens if I press the charm button by accident?",
     answer:
-      "Accidental-activation safeguards and cancellation behavior remain part of production hardware and human-factors design. In the current simulator, a developer can recover from an interrupted synthetic wearable request only by explicitly expiring it with a lab control; that is test tooling, not a consumer cancellation feature. It produces no alert, message, location share, vibration, or emergency action.",
+      "Accidental-activation safeguards and cancellation behavior remain part of production hardware and human-factors design. In the current simulator, a developer can attempt to cancel a still-pending synthetic wearable request before its final processing boundary. Only a confirmed cancelled result counts; too late, missing evidence, and unknown do not. Explicit lab expiry is a fallback for a stuck, unfinished fixture, not cancellation success. These are test controls, not a consumer feature, and they produce no alert, message, location share, vibration, or emergency action.",
   },
   {
     question: "Do I need a subscription to use the app?",
@@ -1021,7 +1021,7 @@ const productPageRequirements = new Map([
       breadcrumbLinks: [],
       breadcrumbCurrent: "Products",
       copy: [
-        "Product vision + current prototype",
+        "Product vision + software-only prototype 1.3",
         "Personal safety, with a more human touch",
         "Today’s coordinated prototype is an engineering rehearsal",
         "NorthStar wearable",
@@ -1061,7 +1061,7 @@ const productPageRequirements = new Map([
       breadcrumbLinks: ["products.html"],
       breadcrumbCurrent: "Personal wearable",
       copy: [
-        "NorthStar vision + software prototype",
+        "NorthStar vision + software-only prototype 1.3",
         "A connected vision, rehearsed in software",
         "Meet Capybear",
         "Wear peace of mind",
@@ -1107,7 +1107,7 @@ const productPageRequirements = new Map([
       breadcrumbLinks: ["products.html"],
       breadcrumbCurrent: "Home Companion",
       copy: [
-        "Future vision + local software prototype",
+        "Future vision + software-only prototype 1.3",
         "Home Companion is an early research concept and is not available today.",
         "Mobile-orchestrated continuity",
         "A gentle check-in, requested on purpose",
@@ -1300,10 +1300,15 @@ for (const [page, requirements] of productPageRequirements) {
 
 const productOverview = pages.get("products.html") ?? "";
 for (const requiredCopy of [
-  "A connected-jewelry vision; current continuity behavior is software simulation only.",
-  "A future product vision with a current no-capture, effect-free localhost contract prototype.",
+  "Prototype 1.3 is an internal software-contract milestone, not an app release or product version.",
+  "It adds size and format checks to selected mobile data paths and clearer replay, cancellation, trace, and stop evidence across the simulators—that is, prior retry results, cancellation results, limited event history, and stop results.",
+  "This strengthens engineering review; it does not add delivery, monitoring, AI safety decisions, or production readiness.",
+  "A connected-jewelry vision; the current software simulator keeps a limited history of state changes, repeated requests, and cancellation results. It does not represent a physical wearable.",
+  "Selected live-voice frames, route responses, and queued Bluetooth observations are checked for size and expected format before the app uses them.",
+  "A future product vision with a current no-capture, effect-free localhost contract prototype. Automated format checks cover emitted examples, its limited status history says when older records were omitted, and stop results remain explicit.",
   "The app shows each endpoint separately and says completed only after both reach executed and the developer explicitly ends the matching Home session.",
-  "Unknown, failed, expired, cancelled, or inconsistent evidence is never shown as success.",
+  "One generated reference value links the two local records.",
+  "Unknown, failed, expired, cancelled, too late, missing, or inconsistent results are never shown as success.",
 ]) {
   if (!normalizedText(productOverview).includes(requiredCopy)) {
     fail("products.html", `must retain the product-status boundary ${JSON.stringify(requiredCopy)}`);
@@ -1350,11 +1355,18 @@ if (valuesFor(wearablePage, "a", "href").some((href) => href.includes("testfligh
   fail("wearable.html", "must not publish a TestFlight link until its exact invitation URL is approved");
 }
 for (const requiredCopy of [
+  "Prototype 1.3 is an internal software-contract milestone, not an app release or product version.",
+  "bounded replay summaries (a limited history of repeated requests and results)",
   "Readiness distinguishes a new request from a known retry.",
-  "a developer may recover from an interrupted fixture only by explicitly expiring it with a lab control.",
+  "New work is allowed only in the simulator's predefined owner-bound test state.",
+  "“Owner-bound” is only a software label; it does not prove who owns a device.",
+  "Identical retries reuse a limited history of prior results; conflicting reuse is rejected.",
+  "Only a confirmed cancelled result counts as cancellation",
+  "Explicit lab expiry is a fallback for a stuck, unfinished fixture—not cancellation success.",
+  "Synthetic reboot scenarios also remain unknown or unavailable, never assumed successful.",
   "executed never means a person or device received anything.",
-  "A local reset keeps bounded duplicate-request tombstones until an explicit rebind",
-  "The production-gate review mode remains local_demo and simulation_only and blocks continuity and haptic semantic writes.",
+  "After a local reset, the simulator keeps a limited record of previously used request keys until a developer explicitly creates a new simulator binding.",
+  "The production-gate review mode remains local simulation and blocks simulated continuity cues and vibration requests.",
   "No physical wearable, vibration, message, location share, contact, emergency action, or external effect occurs.",
 ]) {
   if (!normalizedText(wearablePage).includes(requiredCopy)) {
@@ -1384,11 +1396,15 @@ if (
 }
 for (const requiredCopy of [
   "a wearable has no direct authority over the Home endpoint.",
-  "Its correlation identifier follows the local intent, no-capture session, receipts, and events",
+  "Prototype 1.3 is an internal software-contract milestone, not an app release or product version.",
+  "One generated reference value links the local request, no-capture session, status records, and events",
   "The synthetic session requests no capture, exposes no camera, and never accesses a browser microphone.",
-  "treats the rehearsal as completed only after both report executed and it explicitly ends the correlated Home session.",
-  "A lost terminal receipt becomes unknown—not success.",
-  "Ready, busy, or blocked describes only the process-memory harness—not a person, home, robot, or production system.",
+  "treats the rehearsal as completed only after both report executed and it explicitly ends the linked Home session.",
+  "If the final result record is missing, the app reports unknown—not success.",
+  "Machine-readable rules automatically check emitted examples.",
+  "A bounded, cursor-based trace—a limited event history with a marker for where to continue—reveals only approved status fields and says when older records have been omitted.",
+  "An explicit coordinated stop can cancel pending work, end an active session, or report already stopped, too late, or unknown.",
+  "Ready, busy, or blocked describes only the local in-memory test harness—not a person, home, robot, or production system.",
   "The negative-control production-gate mode rejects every semantic request and remains synthetic.",
 ]) {
   if (!normalizedText(homeCompanionPage).includes(requiredCopy)) {
@@ -1406,6 +1422,7 @@ const residuePatterns = [
   [/\bBearer\s+[A-Za-z0-9._~-]{20,}/u, "bearer credential"],
   [/\b(?:sk_live|AIza)[A-Za-z0-9_-]{12,}/u, "API credential"],
   [/\beyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{10,}\b/u, "JWT"],
+  [/\b[0-9a-f]{40}\b/iu, "internal source revision identifier"],
 ];
 for (const [pattern, label] of residuePatterns) {
   if (pattern.test(siteText)) fail("site", `${label} must not be present in shipped pages`);
@@ -1441,14 +1458,21 @@ for (const required of [
   "The Home Companion integration harness accepts a no-capture check-in fixture only",
   "Local integration and continuity-rehearsal data",
   "one endpoint succeeding does not establish the other succeeded",
-  "The Home correlation identifier follows its intent, session, receipts, and events",
-  "tombstones may remain in wearable process memory through a local reset until an explicit rebind",
+  "Selected developer paths now bound and validate incoming live-voice frames, mapping responses, queued Bluetooth observations, outbound batches, and relevant provider replies",
+  "queue overflow is recorded instead of silently replacing older work",
+  "identifier-bearing Bluetooth diagnostics are redacted",
+  "bounded synthetic ownership, reboot, replay, and cancellation evidence",
+  "Closed machine-readable schemas, a bounded allowlisted trace, and coordinated stop outcomes describe only local software evidence",
+  "Wearable evidence can include bounded synthetic ownership, reboot, replay, and cancellation outcomes",
+  "Home evidence can include a schema-checked, bounded, allowlisted status trace and coordinated stop outcomes",
+  "duplicate-request tombstones can remain in wearable process memory through local reset until explicit rebind",
   "same-computer development processes with no outbound network, persistence, physical device, or external effect",
   "loopback HTTP on the same computer",
+  "Selected mobile inputs and responses are size-bounded and shape-checked before use",
+  "The Home trace includes only allowlisted status evidence and excludes payloads, credentials, device details, contacts, location, and audio",
   "not yet an effective production privacy policy",
-  "de5e213fb9b82c2cd579cb9442ab59524997b916",
-  "019d8f5ef9efa1f3f8402b92d6e1822af6e6a7bc",
-  "8d36fe20bb970907c79f5b8adbd67fc753f04850",
+  "Reviewed source scope",
+  "software-only prototype 1.3 boundary work",
 ]) {
   if (!privacyText.includes(required)) {
     fail("privacy.html", `must preserve reviewed release boundary: ${required}`);
@@ -1485,18 +1509,23 @@ for (const required of [
   "marks the rehearsal completed only after both endpoints report executed",
   "Unknown, failed, expired, cancelled, or inconsistent evidence is not success",
   "manually refresh and reconcile local evidence",
-  "reset retains bounded duplicate-request tombstones until explicit rebind",
+  "The wearable simulator keeps a limited history of prior results",
+  "Only confirmed cancelled evidence counts as cancellation; too late, missing evidence, and unknown remain unresolved",
+  "synthetic ownership and reboot fixtures are not physical identity, provisioning, secure ownership, durable storage, or hardware behavior",
+  "A local reset retains bounded duplicate-request tombstones until explicit rebind",
   "executed receipt means only that its local process-memory state machine advanced",
   "exposes no camera",
+  "Closed machine-readable schemas check emitted examples",
+  "its bounded trace exposes only allowlisted status evidence with continuation and omitted-record information",
+  "An explicit coordinated stop may cancel pending work, end an active session, or report already stopped, too late, or unknown",
   "production-gate review modes remain local simulation and reject semantic work",
   "These candidate Terms do not establish a final product specification",
   "Any sweepstakes, contest, or giveaway must have separately reviewed official rules",
   "No arbitration provision, class-action waiver, governing-law clause",
   "Privacy Notice",
   "george@verylovinginc.com",
-  "de5e213fb9b82c2cd579cb9442ab59524997b916",
-  "019d8f5ef9efa1f3f8402b92d6e1822af6e6a7bc",
-  "8d36fe20bb970907c79f5b8adbd67fc753f04850",
+  "Reviewed source scope",
+  "software-only prototype 1.3 boundary work",
 ]) {
   if (!termsText.includes(required)) {
     fail("terms.html", `must preserve reviewed candidate boundary: ${required}`);
@@ -1645,6 +1674,8 @@ for (const requiredScopeCopy of [
   "NorthStar Wearable",
   "Home Companion Research",
   "22 August 2026",
+  "plain-language status labels that distinguish future product vision from current software-only evidence",
+  "Some legal and prototype-contract language remains technical",
 ]) {
   if (!accessibilityText.includes(requiredScopeCopy)) {
     fail(

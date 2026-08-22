@@ -68,13 +68,11 @@
           </p>
 
           <p>
-            <strong>Reviewed source baselines:</strong>
-            mobile <code>de5e213fb9b82c2cd579cb9442ab59524997b916</code>,
-            wearable <code>019d8f5ef9efa1f3f8402b92d6e1822af6e6a7bc</code>,
-            and Home Companion
-            <code>8d36fe20bb970907c79f5b8adbd67fc753f04850</code>.
-            These engineering identifiers are not app versions or release
-            approvals; any source or deployment change requires a new review.
+            <strong>Reviewed source scope:</strong> the current draft mobile,
+            wearable-simulator, and Home Companion simulator implementations,
+            including the software-only prototype 1.3 boundary work described
+            below. This scope is not an app version or release approval; any
+            source or deployment change requires a new review.
           </p>
 
           <h2>Important current boundaries</h2>
@@ -111,10 +109,26 @@
               expired, cancelled, or inconsistent evidence is not treated as success.
             </li>
             <li>
+              Selected developer paths now bound and validate incoming live-voice
+              frames, mapping responses, queued Bluetooth observations, outbound
+              batches, and relevant provider replies. Malformed or oversized input
+              is rejected, queue overflow is recorded instead of silently replacing
+              older work, and identifier-bearing Bluetooth diagnostics are redacted.
+              These safeguards do not establish provider or production readiness.
+            </li>
+            <li>
+              The wearable simulator adds bounded synthetic ownership, reboot,
+              replay, and cancellation evidence. These fixtures do not establish
+              physical identity, secure ownership, provisioning, durable storage,
+              delivery, or hardware behavior.
+            </li>
+            <li>
               The Home Companion integration harness accepts a no-capture
               check-in fixture only. It does not expose a camera or access a
               browser microphone, and its session always reports capture as
               prohibited and inactive. It does not call an AI or voice provider.
+              Closed machine-readable schemas, a bounded allowlisted trace, and
+              coordinated stop outcomes describe only local software evidence.
             </li>
             <li>
               The current client does not provide automatic danger, distress, or
@@ -299,16 +313,16 @@
                   <th scope="row">Local integration and continuity-rehearsal data</th>
                   <td>
                     Only in the developer-enabled lab, this may include synthetic
-                    endpoint and binding identifiers, profile and revision values,
-                    ephemeral request correlation and idempotency values, simulated
-                    wearable observations, readiness and fault codes, semantic
-                    intent and session identifiers, and synthetic receipt states.
-                    The Home correlation identifier follows its intent, session,
-                    receipts, and events. The mobile app can manually refresh and
-                    reconcile each endpoint; one endpoint succeeding does not
-                    establish the other succeeded. Bounded duplicate-request
-                    tombstones may remain in wearable process memory through a
-                    local reset until an explicit rebind.
+                    endpoint, binding, profile, revision, request-linking, simulated
+                    observation, readiness, fault, intent, session, and receipt
+                    values. Wearable evidence can include bounded synthetic
+                    ownership, reboot, replay, and cancellation outcomes. Home
+                    evidence can include a schema-checked, bounded, allowlisted
+                    status trace and coordinated stop outcomes. The mobile app can
+                    manually refresh and reconcile each endpoint; one endpoint
+                    succeeding does not establish the other succeeded. Bounded
+                    duplicate-request tombstones can remain in wearable process
+                    memory through local reset until explicit rebind.
                   </td>
                   <td>
                     Rehearse and diagnose bounded local software contracts without
@@ -554,6 +568,14 @@
             The services remain bound to loopback, accept only fixed emulator Host
             values, and must not be exposed through a LAN, tunnel, or public proxy.
             No sensitive or production information should be entered into the lab.
+          </p>
+          <p>
+            Selected mobile inputs and responses are size-bounded and shape-checked
+            before use; malformed or oversized data fails closed. Development
+            Bluetooth diagnostics redact device identifiers where recorded. The
+            Home trace includes only allowlisted status evidence and excludes
+            payloads, credentials, device details, contacts, location, and audio.
+            These controls are implementation evidence, not a security certification.
           </p>
 
           <h2>Children</h2>
