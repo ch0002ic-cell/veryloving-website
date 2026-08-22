@@ -70,7 +70,7 @@
           <p>
             <strong>Reviewed source scope:</strong> the current draft mobile,
             wearable-simulator, and Home Companion simulator implementations,
-            including the software-only prototype 1.3 boundary work described
+            including the software-only prototype 1.4 boundary work described
             below. This scope is not an app version or release approval; any
             source or deployment change requires a new review.
           </p>
@@ -129,6 +129,17 @@
               prohibited and inactive. It does not call an AI or voice provider.
               Closed machine-readable schemas, a bounded allowlisted trace, and
               coordinated stop outcomes describe only local software evidence.
+            </li>
+            <li>
+              Prototype 1.4 adds three developer-started, stepwise localhost
+              rehearsal plans and a strict compatibility check against each
+              simulator's self-reported catalog. The app keeps at most 32
+              redacted timeline entries in process memory. Those entries use
+              closed status labels and revision numbers and omit tokens, URLs,
+              endpoint, binding, request, intent, session, and correlation
+              identifiers, timestamps, raw bodies, trace details, and user,
+              location, audio, or device data. The timeline clears when either
+              simulator disconnects or the lab is backgrounded or left.
             </li>
             <li>
               The current client does not provide automatic danger, distress, or
@@ -322,7 +333,11 @@
                     manually refresh and reconcile each endpoint; one endpoint
                     succeeding does not establish the other succeeded. Bounded
                     duplicate-request tombstones can remain in wearable process
-                    memory through local reset until explicit rebind.
+                    memory through local reset until explicit rebind. The separate
+                    mobile rehearsal timeline is limited to 32 redacted in-memory
+                    entries and excludes credentials, network addresses,
+                    identifiers, timestamps, raw payloads, trace details, and user,
+                    location, audio, or device data.
                   </td>
                   <td>
                     Rehearse and diagnose bounded local software contracts without
@@ -352,6 +367,7 @@
                     Local-simulator bearer tokens and correlated rehearsal state are
                     held only in app process memory and are cleared when the lab
                     disconnects, leaves the screen, or moves out of the active state.
+                    The redacted rehearsal timeline follows the same clearing boundary.
                   </td>
                   <td>
                     Maintain the requested session and app state, support limited

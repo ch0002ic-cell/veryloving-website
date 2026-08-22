@@ -37,7 +37,7 @@
           <nav class="product-breadcrumb" aria-label="Breadcrumb">
             <a href="products.html">Products</a><span aria-hidden="true">/</span><span aria-current="page">Personal wearable</span>
           </nav>
-          <p class="product-status-line">NorthStar vision + software-only prototype 1.3</p>
+          <p class="product-status-line">NorthStar vision + software-only prototype 1.4</p>
           <h1 id="wearable-title">More than jewelry</h1>
           <p class="product-lede">
             NorthStar is envisioned to bring warmth, connection, and peace of
@@ -67,13 +67,13 @@
             synthetic process-memory records—not wearable telemetry.
           </p>
           <p>
-            Prototype 1.3 is an internal software-contract milestone, not an app
-            release or product version. It rehearses a synthetic reboot marker
-            (a simulated restart), a closed ownership-state fixture (a fixed set
-            of test-only states), bounded replay summaries (a limited history of
-            repeated requests and results), and explicit cancellation outcomes.
-            These records are not physical identity, secure ownership,
-            provisioning, or durable device storage.
+            Prototype 1.4 is an internal software-contract milestone, not an app
+            release or product version. The simulator now self-reports a closed
+            catalog for three mobile-orchestrated, stepwise rehearsals: ordinary
+            completion, queued cancellation, and transport uncertainty. That
+            catalog is endpoint self-report only, not proof of a physical device,
+            secure ownership, provisioning, sensing, radio behavior, or durable
+            device storage.
           </p>
         </div>
       </section>
@@ -144,7 +144,7 @@
           </article>
           <article class="product-rule-row" role="listitem">
             <h3>04 · Evidence without assumed success</h3>
-            <p>Identical retries reuse a limited history of prior results; conflicting reuse is rejected. A developer may cancel a still-pending synthetic request before it reaches its final processing boundary. Only a confirmed <em>cancelled</em> result counts as cancellation; <em>too late</em>, missing evidence, and <em>unknown</em> remain unresolved. Explicit lab expiry is a fallback for a stuck, unfinished fixture—not cancellation success. Synthetic reboot scenarios also remain unknown or unavailable, never assumed successful.</p>
+            <p>Identical retries reuse a limited history of prior results; conflicting reuse is rejected. A developer may cancel a still-pending synthetic request before it reaches its final processing boundary. Only a confirmed <em>cancelled</em> result counts as cancellation; <em>too late</em>, missing evidence, and <em>unknown</em> remain unresolved. Explicit lab expiry is a fallback for a stuck, unfinished fixture—not cancellation success. Synthetic reboot scenarios also remain unknown or unavailable, never assumed successful. The transport-uncertainty rehearsal deliberately preserves unknown evidence after a simulated post-acknowledgement connection loss; reconnecting never converts it into success.</p>
           </article>
         </div>
       </section>
@@ -160,6 +160,7 @@
             <p role="listitem">The cue is recorded only after an explicit developer action in the mobile lab; no monitoring or automatic trigger runs.</p>
             <p role="listitem">Requested, acknowledged, accepted, executing, and executed are local process-memory receipt states; executed never means a person or device received anything.</p>
             <p role="listitem">After a local reset, the simulator keeps a limited record of previously used request keys until a developer explicitly creates a new simulator binding. This prevents an old request from silently becoming new work.</p>
+            <p role="listitem">The mobile lab does not automate simulator restart or rebind. Those identity-changing controls remain separate, explicit developer actions.</p>
             <p role="listitem">The production-gate review mode remains local simulation and blocks simulated continuity cues and vibration requests.</p>
             <p role="listitem">No physical wearable, vibration, message, location share, contact, emergency action, or external effect occurs. Full product specifications will be shared before launch.</p>
           </div>

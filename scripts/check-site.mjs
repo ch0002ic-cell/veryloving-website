@@ -1050,7 +1050,7 @@ const productPageRequirements = new Map([
       breadcrumbLinks: [],
       breadcrumbCurrent: "Products",
       copy: [
-        "Product vision + software-only prototype 1.3",
+        "Product vision + software-only prototype 1.4",
         "Personal safety, with a more human touch",
         "Today’s coordinated prototype is an engineering rehearsal",
         "NorthStar wearable",
@@ -1090,7 +1090,7 @@ const productPageRequirements = new Map([
       breadcrumbLinks: ["products.html"],
       breadcrumbCurrent: "Personal wearable",
       copy: [
-        "NorthStar vision + software-only prototype 1.3",
+        "NorthStar vision + software-only prototype 1.4",
         "A connected vision, rehearsed in software",
         "Meet Capybear",
         "Wear peace of mind",
@@ -1136,7 +1136,7 @@ const productPageRequirements = new Map([
       breadcrumbLinks: ["products.html"],
       breadcrumbCurrent: "Home Companion",
       copy: [
-        "Future vision + software-only prototype 1.3",
+        "Future vision + software-only prototype 1.4",
         "Home Companion is an early research concept and is not available today.",
         "Mobile-orchestrated continuity",
         "A gentle check-in, requested on purpose",
@@ -1329,15 +1329,17 @@ for (const [page, requirements] of productPageRequirements) {
 
 const productOverview = pages.get("products.html") ?? "";
 for (const requiredCopy of [
-  "Prototype 1.3 is an internal software-contract milestone, not an app release or product version.",
-  "It adds size and format checks to selected mobile data paths and clearer replay, cancellation, trace, and stop evidence across the simulators—that is, prior retry results, cancellation results, limited event history, and stop results.",
-  "This strengthens engineering review; it does not add delivery, monitoring, AI safety decisions, or production readiness.",
+  "Prototype 1.4 is an internal software-contract milestone, not an app release or product version.",
+  "Each simulator self-reports the same closed rehearsal catalog",
+  "ordinary completion, queued cancellation, or transport uncertainty.",
+  "A passing plan means only that the expected local synthetic contract evidence was observed",
   "A connected-jewelry vision; the current software simulator keeps a limited history of state changes, repeated requests, and cancellation results. It does not represent a physical wearable.",
   "Selected live-voice frames, route responses, and queued Bluetooth observations are checked for size and expected format before the app uses them.",
   "A future product vision with a current no-capture, effect-free localhost contract prototype. Automated format checks cover emitted examples, its limited status history says when older records were omitted, and stop results remain explicit.",
-  "The app shows each endpoint separately and says completed only after both reach executed and the developer explicitly ends the matching Home session.",
-  "One generated reference value links the two local records.",
-  "Unknown, failed, expired, cancelled, too late, missing, or inconsistent results are never shown as success.",
+  "The ordinary-completion plan passes only after both local intents reach executed and the app explicitly ends the matching Home session.",
+  "Cancellation and transport uncertainty stay distinct and are never relabeled as completion.",
+  "a separate timeline of at most 32 redacted, in-memory entries.",
+  "The timeline omits tokens, URLs, endpoint, binding, request, intent, session, and correlation identifiers, timestamps, raw payloads, trace detail, and user, location, audio, or device data",
 ]) {
   if (!normalizedText(productOverview).includes(requiredCopy)) {
     fail("products.html", `must retain the product-status boundary ${JSON.stringify(requiredCopy)}`);
@@ -1384,8 +1386,9 @@ if (valuesFor(wearablePage, "a", "href").some((href) => href.includes("testfligh
   fail("wearable.html", "must not publish a TestFlight link until its exact invitation URL is approved");
 }
 for (const requiredCopy of [
-  "Prototype 1.3 is an internal software-contract milestone, not an app release or product version.",
-  "bounded replay summaries (a limited history of repeated requests and results)",
+  "Prototype 1.4 is an internal software-contract milestone, not an app release or product version.",
+  "The simulator now self-reports a closed catalog for three mobile-orchestrated, stepwise rehearsals",
+  "That catalog is endpoint self-report only, not proof of a physical device",
   "Readiness distinguishes a new request from a known retry.",
   "New work is allowed only in the simulator's predefined owner-bound test state.",
   "“Owner-bound” is only a software label; it does not prove who owns a device.",
@@ -1393,8 +1396,10 @@ for (const requiredCopy of [
   "Only a confirmed cancelled result counts as cancellation",
   "Explicit lab expiry is a fallback for a stuck, unfinished fixture—not cancellation success.",
   "Synthetic reboot scenarios also remain unknown or unavailable, never assumed successful.",
+  "reconnecting never converts it into success.",
   "executed never means a person or device received anything.",
   "After a local reset, the simulator keeps a limited record of previously used request keys until a developer explicitly creates a new simulator binding.",
+  "The mobile lab does not automate simulator restart or rebind.",
   "The production-gate review mode remains local simulation and blocks simulated continuity cues and vibration requests.",
   "No physical wearable, vibration, message, location share, contact, emergency action, or external effect occurs.",
 ]) {
@@ -1425,13 +1430,16 @@ if (
 }
 for (const requiredCopy of [
   "a wearable has no direct authority over the Home endpoint.",
-  "Prototype 1.3 is an internal software-contract milestone, not an app release or product version.",
+  "Prototype 1.4 is an internal software-contract milestone, not an app release or product version.",
+  "a closed catalog for three explicit, mobile-orchestrated rehearsal plans",
+  "It does not add a physical product, cross-endpoint authority, or production service.",
   "One generated reference value links the local request, no-capture session, status records, and events",
   "The synthetic session requests no capture, exposes no camera, and never accesses a browser microphone.",
-  "treats the rehearsal as completed only after both report executed and it explicitly ends the linked Home session.",
+  "treats the ordinary-completion rehearsal as completed only after both report executed and it explicitly ends the linked Home session.",
   "If the final result record is missing, the app reports unknown—not success.",
   "Machine-readable rules automatically check emitted examples.",
-  "A bounded, cursor-based trace—a limited event history with a marker for where to continue—reveals only approved status fields and says when older records have been omitted.",
+  "A bounded, cursor-based trace—a limited event history with a marker for where to continue—reveals only approved status and correlation metadata and says when older records have been omitted.",
+  "The mobile lab uses only validated trace event types when evaluating a plan and does not copy trace details into its redacted timeline.",
   "An explicit coordinated stop can cancel pending work, end an active session, or report already stopped, too late, or unknown.",
   "Ready, busy, or blocked describes only the local in-memory test harness—not a person, home, robot, or production system.",
   "The negative-control production-gate mode rejects every semantic request and remains synthetic.",
@@ -1501,7 +1509,12 @@ for (const required of [
   "The Home trace includes only allowlisted status evidence and excludes payloads, credentials, device details, contacts, location, and audio",
   "not yet an effective production privacy policy",
   "Reviewed source scope",
-  "software-only prototype 1.3 boundary work",
+  "Prototype 1.4 adds three developer-started, stepwise localhost rehearsal plans",
+  "at most 32 redacted timeline entries in process memory",
+  "endpoint, binding, request, intent, session, and correlation identifiers",
+  "The timeline clears when either simulator disconnects or the lab is backgrounded or left.",
+  "The separate mobile rehearsal timeline is limited to 32 redacted in-memory entries",
+  "software-only prototype 1.4 boundary work",
 ]) {
   if (!privacyText.includes(required)) {
     fail("privacy.html", `must preserve reviewed release boundary: ${required}`);
@@ -1547,6 +1560,10 @@ for (const required of [
   "Closed machine-readable schemas check emitted examples",
   "its bounded trace exposes only allowlisted status evidence with continuation and omitted-record information",
   "An explicit coordinated stop may cancel pending work, end an active session, or report already stopped, too late, or unknown",
+  "Prototype 1.4 lets a developer choose one of three named, explicit plans",
+  "A passing plan means only that the expected synthetic contract evidence was observed.",
+  "The mobile plan runner does not automate simulator restart or rebind.",
+  "a separate timeline of at most 32 redacted entries in app process memory",
   "production-gate review modes remain local simulation and reject semantic work",
   "These candidate Terms do not establish a final product specification",
   "Any sweepstakes, contest, or giveaway must have separately reviewed official rules",
@@ -1554,7 +1571,7 @@ for (const required of [
   "Privacy Notice",
   "george@verylovinginc.com",
   "Reviewed source scope",
-  "software-only prototype 1.3 boundary work",
+  "software-only prototype 1.4 boundary work",
 ]) {
   if (!termsText.includes(required)) {
     fail("terms.html", `must preserve reviewed candidate boundary: ${required}`);

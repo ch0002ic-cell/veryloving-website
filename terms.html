@@ -68,7 +68,7 @@
           <p>
             <strong>Reviewed source scope:</strong> the current draft mobile,
             wearable-simulator, and Home Companion simulator implementations,
-            including the software-only prototype 1.3 boundary work described
+            including the software-only prototype 1.4 boundary work described
             below. This scope is not an app version or release approval; any
             source or deployment change requires a new review.
           </p>
@@ -233,6 +233,16 @@
             person, or physical device was reached.
           </p>
           <p>
+            Prototype 1.4 lets a developer choose one of three named, explicit
+            plans: ordinary completion, queued cancellation, or transport
+            uncertainty. Before a plan can start, the mobile lab compares the
+            closed catalogs self-reported by both local simulators. A passing plan
+            means only that the expected synthetic contract evidence was observed.
+            Cancellation and uncertainty are test outcomes, not successful
+            delivery or safety outcomes, and reconnecting does not convert an
+            unknown result into success.
+          </p>
+          <p>
             A developer may manually refresh and reconcile local evidence and may
             attempt to cancel a still-pending wearable fixture before its final
             processing boundary. Only confirmed cancelled evidence counts as
@@ -244,7 +254,8 @@
             identity, provisioning, secure ownership, durable storage, or hardware
             behavior. A local reset retains bounded duplicate-request tombstones
             until explicit rebind. These are developer test controls, not consumer
-            cancellation, delivery, or emergency features.
+            cancellation, delivery, or emergency features. The mobile plan runner
+            does not automate simulator restart or rebind.
           </p>
           <p>
             The Home Companion rehearsal requires no capture, exposes no camera,
@@ -259,6 +270,15 @@
             and lease reconciliation fail closed. The production-gate review modes
             remain local simulation and reject semantic work; they are not
             production or staging services.
+          </p>
+          <p>
+            The developer lab may keep a separate timeline of at most 32 redacted
+            entries in app process memory. It contains closed source, plan, stage,
+            event, and outcome labels, revision numbers, and fixed synthetic-effect
+            markers. It omits credentials, URLs, all endpoint and request-related
+            identifiers, timestamps, raw bodies, trace details, and user, location,
+            audio, or device data, and clears when either endpoint disconnects or
+            the lab is backgrounded or left.
           </p>
           <p>
             Physical hardware, firmware, cellular service, manufacturing,
